@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Dashboard with Firebase</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            background: linear-gradient(180deg, #2A3158 0%, #151A30 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Glassmorphism Card Style */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-title { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 20px; color: #fff; }
+        
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; color: #9CA3AF; margin-bottom: 5px; }
+        .input-group input {
+            width: 100%; padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; color: #ffffff; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: #8B5CF6; background: rgba(0, 0, 0, 0.3); }
+
+        .btn {
+            width: 100%; padding: 14px;
+            background: linear-gradient(90deg, #8B5CF6 0%, #C084FC 100%);
+            border: none; border-radius: 14px; color: white;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        .btn:active { transform: scale(0.97); }
+
+        .switch-text { text-align: center; font-size: 13px; color: #9CA3AF; margin-top: 15px; cursor: pointer; }
+        .switch-text span { color: #A78BFA; font-weight: 600; }
+
+        /* Dashboard Styles */
+        #dashboard-section { display: none; width: 100%; max-width: 400px; margin-top: 20px; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .profile-btn {
+            background: rgba(255,255,255,0.1); border: none; padding: 10px 15px; border-radius: 10px;
+            color: white; font-weight: 600; cursor: pointer;
+        }
+        
+        #profile-section { display: none; }
+        
+        .alert { color: #F87171; font-size: 12px; text-align: center; margin-top: 10px; display: none; }
+        .success { color: #10B981; font-size: 12px; text-align: center; margin-top: 10px; display: none; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Auth Section (Login / Sign Up) -->
+    <div class="card" id="auth-section">
+        <h1 class="header-title" id="auth-title">Login</h1>
+        
+        <div class="input-group">
+            <label>Telegram User ID</label>
+            <input type="text" id="tg-id" placeholder="e.g. kumar_123">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+        
+        <button class="btn" id="auth-btn">Login</button>
+        <div class="alert" id="auth-error"></div>
+        
+        <div class="switch-text" id="toggle-auth">
+            Don't have an account? <span>Create Account</span>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard-section">
+        <div class="nav-bar">
+            <h2>Dashboard</h2>
+            <button class="profile-btn" id="open-profile">Profile ⚙️</button>
+        </div>
+
+        <div class="card" style="margin-top:0;">
+            <p style="color:#D1D5DB; font-size:14px;">Welcome to your Bot Dashboard! Click Profile to configure your bot.</p>
+            <button class="btn" id="logout-btn" style="background: rgba(239, 68, 68, 0.2); color: #EF4444; box-shadow: none; margin-top: 20px;">Logout</button>
+        </div>
+    </div>
+
+    <!-- Profile (Token/Key) Section -->
+    <div class="card" id="profile-section">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+            <div style="font-size: 18px; font-weight: 600; color: #A78BFA;">Bot Configuration</div>
+            <span id="close-profile" style="cursor:pointer; color:#9CA3AF;">✖</span>
+        </div>
+        
+        <div class="input-group">
+            <label>Bot Token</label>
+            <input type="text" id="botToken" placeholder="Enter Telegram Bot Token">
+        </div>
+        <div class="input-group">
+            <label>Secret Key</label>
+            <input type="password" id="botKey" placeholder="Enter Secret Key">
+        </div>
+        
+        <button class="btn" id="save-bot-btn">Connect Bot</button>
+        <div class="success" id="bot-success">✅ Bot connected successfully!</div>
+    </div>
+
+
+    <!-- Firebase Integration Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDkmoIzcYsYTBYwIk2A_8hUXWW5znyeTaY",
+            authDomain: "newkumarbot.firebaseapp.com",
+            projectId: "newkumarbot",
+            storageBucket: "newkumarbot.firebasestorage.app",
+            messagingSenderId: "1006933600404",
+            appId: "1:1006933600404:web:1df122474a7598a25fec81",
+            measurementId: "G-PMQ8SCYQC9"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // UI Elements
+        let isLogin = true;
+        const authSection = document.getElementById('auth-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const profileSection = document.getElementById('profile-section');
+        
+        const authTitle = document.getElementById('auth-title');
+        const authBtn = document.getElementById('auth-btn');
+        const toggleAuth = document.getElementById('toggle-auth');
+        const authError = document.getElementById('auth-error');
+
+        // Toggle Login / Signup
+        toggleAuth.addEventListener('click', () => {
+            isLogin = !isLogin;
+            authTitle.innerText = isLogin ? "Login" : "Create Account";
+            authBtn.innerText = isLogin ? "Login" : "Sign Up";
+            toggleAuth.innerHTML = isLogin 
+                ? "Don't have an account? <span>Create Account</span>"
+                : "Already have an account? <span>Login</span>";
+            authError.style.display = 'none';
+        });
+
+        // Authentication Action (Login/Signup)
+        authBtn.addEventListener('click', () => {
+            const tgId = document.getElementById('tg-id').value;
+            const password = document.getElementById('password').value;
+            
+            if(!tgId || !password) {
+                authError.innerText = "Please enter both User ID and Password";
+                authError.style.display = 'block';
+                return;
+            }
+
+            // Firebase trick: Convert Telegram ID to dummy email format
+            const email = tgId.toLowerCase() + "@bot.com";
+            
+            authBtn.innerText = "Processing...";
+            
+            if(isLogin) {
+                signInWithEmailAndPassword(auth, email, password)
+                .catch((error) => {
+                    authError.innerText = "Invalid User ID or Password!";
+                    authError.style.display = 'block';
+                    authBtn.innerText = "Login";
+                });
+            } else {
+                createUserWithEmailAndPassword(auth, email, password)
+                .catch((error) => {
+                    authError.innerText = error.message;
+                    authError.style.display = 'block';
+                    authBtn.innerText = "Sign Up";
+                });
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth);
+            profileSection.style.display = 'none';
+        });
+
+        // Auth State Observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authSection.style.display = 'none';
+                dashboardSection.style.display = 'block';
+            } else {
+                authSection.style.display = 'block';
+                dashboardSection.style.display = 'none';
+                profileSection.style.display = 'none';
+                authBtn.innerText = isLogin ? "Login" : "Sign Up";
+            }
+        });
+
+        // Profile Toggle Logic
+        document.getElementById('open-profile').addEventListener('click', () => {
+            dashboardSection.style.display = 'none';
+            profileSection.style.display = 'block';
+        });
+
+        document.getElementById('close-profile').addEventListener('click', () => {
+            profileSection.style.display = 'none';
+            dashboardSection.style.display = 'block';
+        });
+
+        // Connect Bot Button
+        document.getElementById('save-bot-btn').addEventListener('click', () => {
+            const btn = document.getElementById('save-bot-btn');
+            const success = document.getElementById('bot-success');
+            
+            btn.innerText = "Connecting...";
+            
+            setTimeout(() => {
+                btn.innerText = "Connect Bot";
+                success.style.display = 'block';
+                setTimeout(() => { success.style.display = 'none'; }, 3000);
+            }, 1500);
+        });
+
+    </script>
+</body>
+</html>
