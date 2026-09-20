@@ -63,7 +63,7 @@
         .box h3 { color: #cbd5e1; font-size: 16px; margin-bottom: 15px; font-weight: 600; }
         .wallet-bal { font-size: 32px; font-weight: 800; color: #10b981; text-align: center; margin: 10px 0; }
         
-        .api-key-box { background: #0f172a; padding: 15px; border-radius: 10px; border: 1px dashed #475569; font-family: monospace; color: #38bdf8; font-size: 14px; margin-bottom: 10px; word-break: break-all; }
+        .api-key-box { background: #0f172a; padding: 15px; border-radius: 10px; border: 1px dashed #475569; font-family: monospace; color: #38bdf8; font-size: 14px; margin-bottom: 10px; word-break: break-all; text-align:center;}
 
         .hidden { display: none !important; }
         .msg-alert { font-size: 13px; text-align: center; margin-top: 15px; font-weight: 600; display: none; }
@@ -171,20 +171,21 @@
         <button class="btn btn-danger" onclick="logout()">Logout</button>
     </div>
 
-    <!-- Firebase Script (Realtime DB ONLY) -->
+    <!-- Firebase Script (TUZI NEW CONFIG) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Tumcha SMARTU cha Firebase Config
+        // Tuzi Config (Added databaseURL)
         const firebaseConfig = {
-          apiKey: "AIzaSyBkJZgrlNJRoNW5sPzOIk1RExHHRGceJtk",
-          authDomain: "kumar-kor.firebaseapp.com",
-          databaseURL: "https://kumar-kor-default-rtdb.firebaseio.com",
-          projectId: "kumar-kor",
-          storageBucket: "kumar-kor.firebasestorage.app",
-          messagingSenderId: "923078462955",
-          appId: "1:923078462955:web:5802d80764301bd8cb9dae"
+          apiKey: "AIzaSyDkmoIzcYsYTBYwIk2A_8hUXWW5znyeTaY",
+          authDomain: "newkumarbot.firebaseapp.com",
+          databaseURL: "https://newkumarbot-default-rtdb.firebaseio.com",
+          projectId: "newkumarbot",
+          storageBucket: "newkumarbot.firebasestorage.app",
+          messagingSenderId: "1006933600404",
+          appId: "1:1006933600404:web:1df122474a7598a25fec81",
+          measurementId: "G-PMQ8SCYQC9"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -195,7 +196,7 @@
         let currentUserId = "";
         let globalAdConfig = { link: "", reward: 0 };
 
-        // Utility: Generate Random User Token & Key
+        // Generate Random User Token & Key
         function generateId(length) {
             let result = '';
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -219,6 +220,7 @@
                 document.getElementById('mathQ').innerText = `${n1} + ${n2}`;
                 document.getElementById('mathAns').value = "";
             }
+            document.getElementById('authMsg').style.display = "none";
         };
 
         function showMsg(text, isError = true) {
@@ -226,6 +228,9 @@
             msg.style.display = "block";
             msg.style.color = isError ? "#ef4444" : "#10b981";
             msg.innerText = text;
+            
+            // Reset Button text
+            document.getElementById('authBtn').innerText = isLoginMode ? "Login Now" : "Sign Up & Verify";
         }
 
         window.handleAuth = async function() {
@@ -235,7 +240,7 @@
 
             if(!id || !pass) return showMsg("Please enter ID and Password!");
 
-            // 👑 Admin Login (Hardcoded as per request)
+            // 👑 Admin Login 
             if(id === "101" && pass === "90901") {
                 currentUserId = "ADMIN";
                 document.getElementById('authSection').classList.add('hidden');
@@ -244,38 +249,43 @@
                 return;
             }
 
-            btn.innerText = "Processing...";
+            btn.innerText = "PROCESSING...";
 
-            // Realtime DB Custom Auth Logic
-            const userRef = ref(db, 'bot_users/' + id);
+            try {
+                const userRef = ref(db, 'bot_users/' + id);
 
-            if(!isLoginMode) {
-                // SIGN UP
-                let mAns = parseInt(document.getElementById('mathAns').value);
-                if(mAns !== captchaAns) { btn.innerText = "Sign Up & Verify"; return showMsg("Wrong Math Answer!"); }
-                
-                let snap = await get(userRef);
-                if(snap.exists()) { btn.innerText = "Sign Up & Verify"; return showMsg("Account already exists! Please login."); }
-                
-                // Create new user with API Tokens
-                let newUser = {
-                    password: pass,
-                    balance: 0,
-                    api_token: "USR-" + generateId(8),
-                    api_key: "KEY-" + generateId(12)
-                };
-                
-                await set(userRef, newUser);
-                openUserDashboard(id, newUser);
-            } else {
-                // LOGIN
-                let snap = await get(userRef);
-                if(!snap.exists()) { btn.innerText = "Login Now"; return showMsg("Account not found!"); }
-                
-                let userData = snap.val();
-                if(userData.password !== pass) { btn.innerText = "Login Now"; return showMsg("Incorrect Password!"); }
-                
-                openUserDashboard(id, userData);
+                if(!isLoginMode) {
+                    // SIGN UP
+                    let mAns = parseInt(document.getElementById('mathAns').value);
+                    if(mAns !== captchaAns) return showMsg("Wrong Math Answer!");
+                    
+                    let snap = await get(userRef);
+                    if(snap.exists()) return showMsg("Account already exists! Please login.");
+                    
+                    // Create new user with API Tokens
+                    let newUser = {
+                        password: pass,
+                        balance: 0,
+                        api_token: "USR-" + generateId(8),
+                        api_key: "KEY-" + generateId(12)
+                    };
+                    
+                    await set(userRef, newUser);
+                    openUserDashboard(id, newUser);
+                } else {
+                    // LOGIN
+                    let snap = await get(userRef);
+                    if(!snap.exists()) return showMsg("Account not found!");
+                    
+                    let userData = snap.val();
+                    if(userData.password !== pass) return showMsg("Incorrect Password!");
+                    
+                    openUserDashboard(id, userData);
+                }
+            } catch (error) {
+                // If Database fails (e.g., rules error), reset button
+                showMsg("Database Error! Check Firebase Rules.");
+                console.error(error);
             }
         };
 
@@ -287,12 +297,10 @@
             document.getElementById('userApiToken').innerText = data.api_token;
             document.getElementById('userApiKey').innerText = data.api_key;
             
-            // Live Balance Listener
             onValue(ref(db, 'bot_users/' + id + '/balance'), (snap) => {
                 document.getElementById('userBalance').innerText = snap.val() || 0;
             });
 
-            // Live Ads Config Listener
             onValue(ref(db, 'admin/adsConfig'), (snap) => {
                 if(snap.exists()) {
                     globalAdConfig = snap.val();
@@ -307,12 +315,10 @@
             });
         }
 
-        // --- USER FUNCTIONS ---
         window.watchAd = function() {
             if(!globalAdConfig.link) return;
-            window.open(globalAdConfig.link, '_blank'); // Open Ad
+            window.open(globalAdConfig.link, '_blank');
             
-            // Add money after fake delay
             setTimeout(async () => {
                 let snap = await get(ref(db, 'bot_users/' + currentUserId + '/balance'));
                 let curBal = snap.val() || 0;
@@ -325,18 +331,13 @@
             let code = document.getElementById('claimCodeInput').value.trim().toUpperCase();
             if(!code) return alert("Enter code!");
             
-            let giftRef = ref(db, 'admin/giftCodes/' + code);
-            let snap = await get(giftRef);
-            
+            let snap = await get(ref(db, 'admin/giftCodes/' + code));
             if(!snap.exists()) return alert("❌ Invalid or Expired Code!");
             
             let giftData = snap.val();
-            
-            // Check if user already used
             let usedSnap = await get(ref(db, 'bot_users/' + currentUserId + '/usedGifts/' + code));
             if(usedSnap.exists()) return alert("❌ You already claimed this code!");
 
-            // Add Balance
             let balSnap = await get(ref(db, 'bot_users/' + currentUserId + '/balance'));
             let newBal = (balSnap.val() || 0) + parseInt(giftData.reward);
             
@@ -349,7 +350,6 @@
             alert(`🎁 Success! ₹${giftData.reward} added to your wallet!`);
         };
 
-        // --- ADMIN FUNCTIONS ---
         async function loadAdminData() {
             let snap = await get(ref(db, 'admin'));
             if(snap.exists()) {
@@ -389,9 +389,7 @@
             });
         };
 
-        window.logout = function() {
-            location.reload(); // Quick reset
-        };
+        window.logout = function() { location.reload(); };
     </script>
 </body>
 </html>
