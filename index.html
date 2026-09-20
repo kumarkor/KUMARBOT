@@ -3,359 +3,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pop Ninja - Bot Admin</title>
+    <title>Premium Bot Dashboard</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body {
-            background: linear-gradient(135deg, #1A1F35 0%, #0F1222 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            overflow-x: hidden;
         }
 
-        /* Glassmorphism Card Style */
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
             padding: 30px;
             width: 100%;
-            max-width: 420px;
-            margin-top: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(15px);
+            max-width: 450px;
+            margin-top: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            backdrop-filter: blur(12px);
         }
 
-        .header-title { font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 25px; background: linear-gradient(90deg, #A78BFA, #F472B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-title { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 25px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .input-group { margin-bottom: 18px; }
-        .input-group label { display: block; font-size: 13px; color: #9CA3AF; margin-bottom: 8px; font-weight: 500; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 600; }
         .input-group input {
-            width: 100%; padding: 14px 18px;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1.5px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px; color: #ffffff; font-size: 15px; outline: none; transition: 0.3s;
+            width: 100%; padding: 14px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; color: #fff; font-size: 15px; outline: none; transition: 0.3s;
         }
-        .input-group input:focus { border-color: #8B5CF6; background: rgba(0, 0, 0, 0.4); box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+        .input-group input:focus { border-color: #3b82f6; background: rgba(0, 0, 0, 0.5); }
 
         .btn {
             width: 100%; padding: 15px;
-            background: linear-gradient(90deg, #8B5CF6 0%, #D946EF 100%);
-            border: none; border-radius: 14px; color: white;
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 10px;
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none; border-radius: 12px; color: white;
+            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); text-transform: uppercase; letter-spacing: 1px;
         }
         .btn:active { transform: scale(0.96); }
-        .btn-revoke { background: linear-gradient(90deg, #EF4444 0%, #B91C1C 100%); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); margin-top: 15px; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); }
+        .btn-purple { background: linear-gradient(135deg, #a855f7, #7e22ce); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.4); }
 
-        .switch-text { text-align: center; font-size: 14px; color: #9CA3AF; margin-top: 20px; cursor: pointer; }
-        .switch-text span { color: #A78BFA; font-weight: 600; text-decoration: underline; }
+        .switch-text { text-align: center; font-size: 14px; color: #94a3b8; margin-top: 20px; cursor: pointer; }
+        .switch-text span { color: #60a5fa; font-weight: 600; text-decoration: underline; }
 
-        /* Dashboard Styles */
-        #dashboard-section { display: none; width: 100%; max-width: 420px; margin-top: 20px; }
-        .nav-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .profile-badge {
-            background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4);
-            padding: 8px 15px; border-radius: 20px; color: #E9D5FF; font-weight: 600; font-size: 14px;
-        }
-
-        /* Wallet Card */
-        .wallet-card {
-            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-            border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-        }
-        .wallet-title { font-size: 14px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; }
-        .wallet-amount { font-size: 36px; font-weight: 700; margin-top: 5px; }
-
-        .warning-text { font-size: 12px; color: #FCA5A5; text-align: center; margin-top: 15px; font-weight: 500; background: rgba(239,68,68,0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(239,68,68,0.2); }
+        /* Dashboard Boxes */
+        .box { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .box h3 { color: #cbd5e1; font-size: 16px; margin-bottom: 15px; font-weight: 600; }
+        .wallet-bal { font-size: 32px; font-weight: 800; color: #10b981; text-align: center; margin: 10px 0; }
         
-        .alert { color: #F87171; font-size: 13px; text-align: center; margin-top: 15px; display: none; font-weight: 500; }
-        .success { color: #34D399; font-size: 13px; text-align: center; margin-top: 15px; display: none; font-weight: 500; }
+        .api-key-box { background: #0f172a; padding: 15px; border-radius: 10px; border: 1px dashed #475569; font-family: monospace; color: #38bdf8; font-size: 14px; margin-bottom: 10px; word-break: break-all; }
 
-        #captcha-container { display: none; }
-        .captcha-box { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .captcha-question { font-size: 18px; font-weight: 600; letter-spacing: 2px; color: #A78BFA; }
-        .captcha-input { width: 60% !important; margin-bottom: 0 !important; }
-
+        .hidden { display: none !important; }
+        .msg-alert { font-size: 13px; text-align: center; margin-top: 15px; font-weight: 600; display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Auth Section -->
-    <div class="card" id="auth-section">
-        <h1 class="header-title" id="auth-title">Login</h1>
+    <!-- 1. AUTH SECTION -->
+    <div class="container" id="authSection">
+        <h1 class="header-title" id="authTitle">User Login</h1>
         
         <div class="input-group">
-            <label>Telegram User ID / Admin ID</label>
-            <input type="text" id="tg-id" placeholder="e.g. 101 or userID">
+            <label>Telegram ID (Admin: 101)</label>
+            <input type="text" id="tgId" placeholder="Enter your ID">
         </div>
         <div class="input-group">
             <label>Password</label>
-            <input type="password" id="password" placeholder="••••••••">
+            <input type="password" id="tgPass" placeholder="••••••••">
         </div>
 
-        <!-- Maths Captcha -->
-        <div id="captcha-container">
-            <label style="font-size: 13px; color: #9CA3AF; margin-bottom: 5px; display:block;">Math Verification</label>
-            <div class="captcha-box">
-                <span class="captcha-question" id="math-q">5 + 3 = </span>
-                <input type="number" id="captcha-ans" class="input-group captcha-input" placeholder="?">
-            </div>
+        <div id="captchaBox" class="hidden">
+            <label style="font-size: 13px; color: #94a3b8; display:block; margin-bottom: 5px;">Solve Math: <span id="mathQ" style="color:#60a5fa; font-weight:bold; font-size:16px;"></span></label>
+            <input type="number" id="mathAns" class="input-group" placeholder="Answer?">
         </div>
         
-        <button class="btn" id="auth-btn">Login to Dashboard</button>
-        <div class="alert" id="auth-error"></div>
+        <button class="btn" id="authBtn" onclick="handleAuth()">Login Now</button>
+        <div id="authMsg" class="msg-alert"></div>
         
-        <div class="switch-text" id="toggle-auth">
-            Don't have an account? <span id="toggle-span">Create Account</span>
+        <div class="switch-text" onclick="toggleAuthMode()">
+            <span id="toggleText">Create New Account</span>
         </div>
     </div>
 
-    <!-- Dashboard Section -->
-    <div id="dashboard-section">
-        <div class="nav-bar">
-            <h2 style="font-size: 22px;">Dashboard</h2>
-            <div class="profile-badge" id="user-badge">User</div>
+    <!-- 2. USER DASHBOARD -->
+    <div class="container hidden" id="userDashboard">
+        <h2 style="font-size: 22px; margin-bottom: 20px; color: #fff;">👋 Hello, User</h2>
+        
+        <div class="box">
+            <h3>💳 My Wallet</h3>
+            <div class="wallet-bal">₹ <span id="userBalance">0</span></div>
         </div>
 
-        <div class="wallet-card">
-            <div class="wallet-title">Total Balance</div>
-            <div class="wallet-amount" id="wallet-bal">₹0</div>
+        <!-- Dynamic Ads Button -->
+        <button id="btnWatchAd" class="btn btn-purple hidden" onclick="watchAd()">📺 Watch Ad & Earn</button>
+        <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
+
+        <div class="box">
+            <h3>🔗 Your Bot API Credentials</h3>
+            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 10px;">Send this Token and Key to the Telegram bot to connect your account.</p>
+            <label style="font-size: 12px; color: #64748b;">User Token:</label>
+            <div class="api-key-box" id="userApiToken">Loading...</div>
+            <label style="font-size: 12px; color: #64748b;">Secret Key:</label>
+            <div class="api-key-box" id="userApiKey">Loading...</div>
         </div>
 
-        <div class="card" style="margin-top:0;">
-            <div style="font-size: 18px; font-weight: 600; color: #A78BFA; margin-bottom: 20px;">Bot Configuration</div>
-            
-            <div class="input-group">
-                <label>Telegram Bot Token</label>
-                <input type="text" id="botToken" placeholder="12345:ABCDefgh...">
-            </div>
-            <div class="input-group">
-                <label>Secret Key (Required)</label>
-                <input type="password" id="botKey" placeholder="Enter Secret Key">
-            </div>
-
-            <div class="warning-text">
-                ⚠️ Warning: Hi Secret Key aani Token konasobat hi share karu naye! 
-            </div>
-            
-            <button class="btn" id="save-bot-btn">✅ Connect Bot</button>
-            <button class="btn btn-revoke" id="revoke-btn">🔄 Revoke Token & Key</button>
-            
-            <div class="alert" id="bot-error"></div>
-            <div class="success" id="bot-success"></div>
-
-            <div style="text-align: center; margin-top: 25px;">
-                <span style="color: #9CA3AF; font-size: 13px; cursor: pointer; text-decoration: underline;" id="logout-btn">Logout</span>
-            </div>
+        <div class="box">
+            <h3>🎁 Claim Gift Code</h3>
+            <input type="text" id="claimCodeInput" placeholder="Enter Code" style="width: 100%; padding: 12px; border-radius: 8px; margin-bottom: 10px; outline:none; border:none; text-transform:uppercase;">
+            <button class="btn btn-success" style="padding: 10px;" onclick="claimGift()">Claim Reward</button>
         </div>
+
+        <button class="btn btn-danger" onclick="logout()">Logout</button>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- 3. ADMIN DASHBOARD -->
+    <div class="container hidden" id="adminDashboard">
+        <h2 style="font-size: 24px; margin-bottom: 20px; color: #ef4444;">👑 Master Admin</h2>
+        
+        <div class="box" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
+            <h3>🤖 Master Bot Setup</h3>
+            <div class="input-group">
+                <label>Telegram Bot Token (From BotFather)</label>
+                <input type="text" id="adminBotToken" placeholder="12345:ABCDefgh...">
+            </div>
+            <button class="btn" onclick="saveMasterBot()">Save Bot Token</button>
+        </div>
+
+        <div class="box">
+            <h3>📺 Setup Ads (Earn System)</h3>
+            <p style="font-size: 11px; color:#94a3b8; margin-bottom:10px;">If link is empty, the Ad button will be hidden for users.</p>
+            <div class="input-group">
+                <label>Ad URL (Link)</label>
+                <input type="url" id="adminAdLink" placeholder="https://...">
+            </div>
+            <div class="input-group">
+                <label>Reward per view (₹)</label>
+                <input type="number" id="adminAdReward" placeholder="e.g. 5">
+            </div>
+            <button class="btn btn-purple" onclick="saveAdConfig()">Save Ads Settings</button>
+        </div>
+
+        <div class="box">
+            <h3>🎁 Create Gift Code</h3>
+            <div class="input-group">
+                <label>Code Name</label>
+                <input type="text" id="adminGiftName" style="text-transform: uppercase;">
+            </div>
+            <div class="input-group">
+                <label>Reward Amount (₹)</label>
+                <input type="number" id="adminGiftReward">
+            </div>
+            <button class="btn btn-success" onclick="createGift()">Create Code</button>
+        </div>
+
+        <button class="btn btn-danger" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Firebase Script (Realtime DB ONLY) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+        // Tumcha SMARTU cha Firebase Config
         const firebaseConfig = {
-            apiKey: "AIzaSyDkmoIzcYsYTBYwIk2A_8hUXWW5znyeTaY",
-            authDomain: "newkumarbot.firebaseapp.com",
-            projectId: "newkumarbot",
-            storageBucket: "newkumarbot.firebasestorage.app",
-            messagingSenderId: "1006933600404",
-            appId: "1:1006933600404:web:1df122474a7598a25fec81",
-            measurementId: "G-PMQ8SCYQC9"
+          apiKey: "AIzaSyBkJZgrlNJRoNW5sPzOIk1RExHHRGceJtk",
+          authDomain: "kumar-kor.firebaseapp.com",
+          databaseURL: "https://kumar-kor-default-rtdb.firebaseio.com",
+          projectId: "kumar-kor",
+          storageBucket: "kumar-kor.firebasestorage.app",
+          messagingSenderId: "923078462955",
+          appId: "1:923078462955:web:5802d80764301bd8cb9dae"
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
 
-        let isLogin = true;
-        let captchaCorrectAns = 0;
+        let isLoginMode = true;
+        let captchaAns = 0;
         let currentUserId = "";
+        let globalAdConfig = { link: "", reward: 0 };
 
-        // Elements
-        const authSection = document.getElementById('auth-section');
-        const dashboardSection = document.getElementById('dashboard-section');
-        const authBtn = document.getElementById('auth-btn');
-        const errorDiv = document.getElementById('auth-error');
-        const captchaContainer = document.getElementById('captcha-container');
-        
-        function generateCaptcha() {
-            let num1 = Math.floor(Math.random() * 10) + 1;
-            let num2 = Math.floor(Math.random() * 10) + 1;
-            captchaCorrectAns = num1 + num2;
-            document.getElementById('math-q').innerText = `${num1} + ${num2} = `;
-            document.getElementById('captcha-ans').value = '';
+        // Utility: Generate Random User Token & Key
+        function generateId(length) {
+            let result = '';
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+            return result;
         }
 
-        // Toggle UI
-        document.getElementById('toggle-auth').addEventListener('click', () => {
-            isLogin = !isLogin;
-            errorDiv.style.display = 'none';
-            document.getElementById('auth-title').innerText = isLogin ? "Login" : "Create Account";
-            authBtn.innerText = isLogin ? "Login to Dashboard" : "Sign Up & Verify";
-            captchaContainer.style.display = isLogin ? "none" : "block";
-            document.getElementById('toggle-auth').innerHTML = isLogin 
-                ? "Don't have an account? <span>Create Account</span>"
-                : "Already have an account? <span>Login</span>";
-            if(!isLogin) generateCaptcha();
-        });
-
-        // Authentication Process
-        authBtn.addEventListener('click', async () => {
-            const tgId = document.getElementById('tg-id').value.trim();
-            const pass = document.getElementById('password').value;
+        window.toggleAuthMode = function() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('authTitle').innerText = isLoginMode ? "User Login" : "Create Account";
+            document.getElementById('authBtn').innerText = isLoginMode ? "Login Now" : "Sign Up & Verify";
+            document.getElementById('toggleText').innerText = isLoginMode ? "Create New Account" : "Already have an account? Login";
             
-            if(!tgId || !pass) { showError(errorDiv, "Enter ID and Password!"); return; }
+            if(isLoginMode) {
+                document.getElementById('captchaBox').classList.add('hidden');
+            } else {
+                document.getElementById('captchaBox').classList.remove('hidden');
+                let n1 = Math.floor(Math.random() * 10) + 1;
+                let n2 = Math.floor(Math.random() * 10) + 1;
+                captchaAns = n1 + n2;
+                document.getElementById('mathQ').innerText = `${n1} + ${n2}`;
+                document.getElementById('mathAns').value = "";
+            }
+        };
 
-            // Admin Logic Override
-            if(tgId === '101' && pass === '90901') {
-                currentUserId = "Admin";
-                openDashboard("Admin 👑", "₹99,999");
-                loadBotData("Admin");
+        function showMsg(text, isError = true) {
+            let msg = document.getElementById('authMsg');
+            msg.style.display = "block";
+            msg.style.color = isError ? "#ef4444" : "#10b981";
+            msg.innerText = text;
+        }
+
+        window.handleAuth = async function() {
+            let id = document.getElementById('tgId').value.trim();
+            let pass = document.getElementById('tgPass').value;
+            let btn = document.getElementById('authBtn');
+
+            if(!id || !pass) return showMsg("Please enter ID and Password!");
+
+            // 👑 Admin Login (Hardcoded as per request)
+            if(id === "101" && pass === "90901") {
+                currentUserId = "ADMIN";
+                document.getElementById('authSection').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadAdminData();
                 return;
             }
 
-            authBtn.innerText = "Processing...";
-            const email = tgId.toLowerCase() + "@bot.com";
+            btn.innerText = "Processing...";
 
-            try {
-                if(!isLogin) {
-                    const userAns = parseInt(document.getElementById('captcha-ans').value);
-                    if(userAns !== captchaCorrectAns) {
-                        showError(errorDiv, "Wrong Math Answer! Try again.");
-                        generateCaptcha();
-                        authBtn.innerText = "Sign Up & Verify";
-                        return;
-                    }
-                    // Create Firebase User
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                    currentUserId = tgId;
-                    // Save Initial Balance to Firestore
-                    await setDoc(doc(db, "users", currentUserId), { balance: "₹1,250", token: "", key: "" });
-                    openDashboard("@" + tgId, "₹1,250");
-                } else {
-                    // Login Firebase User
-                    await signInWithEmailAndPassword(auth, email, pass);
-                    currentUserId = tgId;
-                    const docSnap = await getDoc(doc(db, "users", currentUserId));
-                    let bal = "₹0";
-                    if (docSnap.exists()) {
-                        bal = docSnap.data().balance || "₹0";
-                        document.getElementById('botToken').value = docSnap.data().token || "";
-                        document.getElementById('botKey').value = docSnap.data().key || "";
-                    }
-                    openDashboard("@" + tgId, bal);
-                }
-            } catch(error) {
-                showError(errorDiv, error.message.replace("Firebase: ", ""));
-                authBtn.innerText = isLogin ? "Login to Dashboard" : "Sign Up & Verify";
+            // Realtime DB Custom Auth Logic
+            const userRef = ref(db, 'bot_users/' + id);
+
+            if(!isLoginMode) {
+                // SIGN UP
+                let mAns = parseInt(document.getElementById('mathAns').value);
+                if(mAns !== captchaAns) { btn.innerText = "Sign Up & Verify"; return showMsg("Wrong Math Answer!"); }
+                
+                let snap = await get(userRef);
+                if(snap.exists()) { btn.innerText = "Sign Up & Verify"; return showMsg("Account already exists! Please login."); }
+                
+                // Create new user with API Tokens
+                let newUser = {
+                    password: pass,
+                    balance: 0,
+                    api_token: "USR-" + generateId(8),
+                    api_key: "KEY-" + generateId(12)
+                };
+                
+                await set(userRef, newUser);
+                openUserDashboard(id, newUser);
+            } else {
+                // LOGIN
+                let snap = await get(userRef);
+                if(!snap.exists()) { btn.innerText = "Login Now"; return showMsg("Account not found!"); }
+                
+                let userData = snap.val();
+                if(userData.password !== pass) { btn.innerText = "Login Now"; return showMsg("Incorrect Password!"); }
+                
+                openUserDashboard(id, userData);
             }
-        });
+        };
 
-        function openDashboard(username, balance) {
-            authSection.style.display = 'none';
-            dashboardSection.style.display = 'block';
-            document.getElementById('user-badge').innerText = username;
-            document.getElementById('wallet-bal').innerText = balance;
-        }
-
-        // Firestore Load Data for Admin
-        async function loadBotData(userId) {
-            try {
-                const docSnap = await getDoc(doc(db, "botConfig", userId));
-                if (docSnap.exists()) {
-                    document.getElementById('botToken').value = docSnap.data().token || "";
-                    document.getElementById('botKey').value = docSnap.data().key || "";
-                }
-            } catch (e) {}
-        }
-
-        // Connect Bot to Firestore
-        document.getElementById('save-bot-btn').addEventListener('click', async () => {
-            const token = document.getElementById('botToken').value.trim();
-            const key = document.getElementById('botKey').value.trim();
-            const bError = document.getElementById('bot-error');
-            const bSuccess = document.getElementById('bot-success');
-            const btn = document.getElementById('save-bot-btn');
-
-            bError.style.display = 'none'; bSuccess.style.display = 'none';
-
-            if(!token || !key) { showError(bError, "Token and Key both are required!"); return; }
-            if(token.length < 15 || !token.includes(":")) { showError(bError, "❌ Invalid Bot Token format!"); return; }
-            if(key.length < 4) { showError(bError, "❌ Secret Key must be longer!"); return; }
-
-            btn.innerText = "Saving to Database...";
-
-            try {
-                if(currentUserId === "Admin") {
-                    await setDoc(doc(db, "botConfig", "Admin"), { token: token, key: key }, { merge: true });
-                } else {
-                    await setDoc(doc(db, "users", currentUserId), { token: token, key: key }, { merge: true });
-                }
-                btn.innerText = "✅ Connect Bot";
-                bSuccess.innerText = "✅ Token & Key saved securely in Firestore!";
-                bSuccess.style.display = 'block';
-            } catch(e) {
-                showError(bError, "Error saving to Database!");
-                btn.innerText = "✅ Connect Bot";
-            }
-        });
-
-        // Revoke Bot
-        document.getElementById('revoke-btn').addEventListener('click', async () => {
-            document.getElementById('botToken').value = '';
-            document.getElementById('botKey').value = '';
-            document.getElementById('bot-success').style.display = 'none';
+        function openUserDashboard(id, data) {
+            currentUserId = id;
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('userDashboard').classList.remove('hidden');
             
-            try {
-                if(currentUserId === "Admin") {
-                    await setDoc(doc(db, "botConfig", "Admin"), { token: "", key: "" }, { merge: true });
-                } else {
-                    await setDoc(doc(db, "users", currentUserId), { token: "", key: "" }, { merge: true });
-                }
-                const bError = document.getElementById('bot-error');
-                bError.style.color = '#FBBF24'; 
-                bError.innerText = "🔄 Token and Key Revoked & Deleted from Firestore.";
-                bError.style.display = 'block';
-            } catch(e) {}
-        });
-
-        // Logout
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                dashboardSection.style.display = 'none';
-                authSection.style.display = 'block';
-                document.getElementById('tg-id').value = '';
-                document.getElementById('password').value = '';
-                document.getElementById('botToken').value = '';
-                document.getElementById('botKey').value = '';
-                authBtn.innerText = "Login to Dashboard";
-                document.getElementById('bot-error').style.display = 'none';
-                document.getElementById('bot-success').style.display = 'none';
-                isLogin = true;
-                document.getElementById('auth-title').innerText = "Login";
-                authBtn.innerText = "Login to Dashboard";
-                captchaContainer.style.display = "none";
-                document.getElementById('toggle-auth').innerHTML = "Don't have an account? <span>Create Account</span>";
+            document.getElementById('userApiToken').innerText = data.api_token;
+            document.getElementById('userApiKey').innerText = data.api_key;
+            
+            // Live Balance Listener
+            onValue(ref(db, 'bot_users/' + id + '/balance'), (snap) => {
+                document.getElementById('userBalance').innerText = snap.val() || 0;
             });
-        });
 
-        function showError(element, msg) {
-            element.style.color = '#F87171';
-            element.innerText = msg;
-            element.style.display = 'block';
+            // Live Ads Config Listener
+            onValue(ref(db, 'admin/adsConfig'), (snap) => {
+                if(snap.exists()) {
+                    globalAdConfig = snap.val();
+                    let adBtn = document.getElementById('btnWatchAd');
+                    if(globalAdConfig.link && globalAdConfig.link.trim() !== "") {
+                        adBtn.classList.remove('hidden');
+                        adBtn.innerText = `📺 Watch Ad (Earn ₹${globalAdConfig.reward})`;
+                    } else {
+                        adBtn.classList.add('hidden');
+                    }
+                }
+            });
         }
+
+        // --- USER FUNCTIONS ---
+        window.watchAd = function() {
+            if(!globalAdConfig.link) return;
+            window.open(globalAdConfig.link, '_blank'); // Open Ad
+            
+            // Add money after fake delay
+            setTimeout(async () => {
+                let snap = await get(ref(db, 'bot_users/' + currentUserId + '/balance'));
+                let curBal = snap.val() || 0;
+                await update(ref(db, 'bot_users/' + currentUserId), { balance: curBal + parseInt(globalAdConfig.reward) });
+                alert(`🎉 You earned ₹${globalAdConfig.reward} from Ads!`);
+            }, 3000);
+        };
+
+        window.claimGift = async function() {
+            let code = document.getElementById('claimCodeInput').value.trim().toUpperCase();
+            if(!code) return alert("Enter code!");
+            
+            let giftRef = ref(db, 'admin/giftCodes/' + code);
+            let snap = await get(giftRef);
+            
+            if(!snap.exists()) return alert("❌ Invalid or Expired Code!");
+            
+            let giftData = snap.val();
+            
+            // Check if user already used
+            let usedSnap = await get(ref(db, 'bot_users/' + currentUserId + '/usedGifts/' + code));
+            if(usedSnap.exists()) return alert("❌ You already claimed this code!");
+
+            // Add Balance
+            let balSnap = await get(ref(db, 'bot_users/' + currentUserId + '/balance'));
+            let newBal = (balSnap.val() || 0) + parseInt(giftData.reward);
+            
+            let updates = {};
+            updates['bot_users/' + currentUserId + '/balance'] = newBal;
+            updates['bot_users/' + currentUserId + '/usedGifts/' + code] = true;
+            
+            await update(ref(db), updates);
+            document.getElementById('claimCodeInput').value = "";
+            alert(`🎁 Success! ₹${giftData.reward} added to your wallet!`);
+        };
+
+        // --- ADMIN FUNCTIONS ---
+        async function loadAdminData() {
+            let snap = await get(ref(db, 'admin'));
+            if(snap.exists()) {
+                let data = snap.val();
+                if(data.masterBotToken) document.getElementById('adminBotToken').value = data.masterBotToken;
+                if(data.adsConfig) {
+                    document.getElementById('adminAdLink').value = data.adsConfig.link || "";
+                    document.getElementById('adminAdReward').value = data.adsConfig.reward || "";
+                }
+            }
+        }
+
+        window.saveMasterBot = function() {
+            let token = document.getElementById('adminBotToken').value.trim();
+            update(ref(db, 'admin'), { masterBotToken: token }).then(() => alert("✅ Master Bot Token Saved!"));
+        };
+
+        window.saveAdConfig = function() {
+            let link = document.getElementById('adminAdLink').value.trim();
+            let reward = parseInt(document.getElementById('adminAdReward').value) || 0;
+            
+            update(ref(db, 'admin/adsConfig'), { link: link, reward: reward }).then(() => {
+                alert(link ? "✅ Ads Activated globally!" : "🚫 Ads disabled globally (Link removed).");
+            });
+        };
+
+        window.createGift = function() {
+            let code = document.getElementById('adminGiftName').value.trim().toUpperCase();
+            let reward = parseInt(document.getElementById('adminGiftReward').value);
+            
+            if(!code || !reward) return alert("Fill both fields!");
+            
+            set(ref(db, 'admin/giftCodes/' + code), { reward: reward }).then(() => {
+                document.getElementById('adminGiftName').value = "";
+                document.getElementById('adminGiftReward').value = "";
+                alert(`✅ Gift Code [${code}] Created!`);
+            });
+        };
+
+        window.logout = function() {
+            location.reload(); // Quick reset
+        };
     </script>
 </body>
 </html>
