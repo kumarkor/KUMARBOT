@@ -3,180 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Bot Dashboard</title>
+    <title>Pop Ninja Pro - Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-dark: #1e2445;
+            --bg-card: #27315c;
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #f8fafc;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 20px;
+            overflow-x: hidden;
+            padding-bottom: 80px; /* For bottom nav */
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            margin-top: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            backdrop-filter: blur(12px);
+        /* --- AUTH SCREEN --- */
+        .auth-container {
+            width: 100%; max-width: 400px; margin: 40px auto; padding: 30px;
+            background: rgba(39, 49, 92, 0.5); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px; backdrop-filter: blur(10px);
         }
+        .auth-header { text-align: center; margin-bottom: 25px; }
+        .auth-header h1 { font-size: 28px; font-weight: 800; background: linear-gradient(90deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+        .input-group input { width: 100%; padding: 14px 15px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); }
+        .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #6366f1, #4f46e5); border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
+        .btn:active { transform: scale(0.97); }
+        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        .switch-text { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 20px; cursor: pointer; }
+        .switch-text span { color: var(--primary-light); font-weight: 600; }
 
-        .header-title { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 25px; background: linear-gradient(90deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* --- DASHBOARD HEADER --- */
+        .dash-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .dash-title { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .user-greeting { font-size: 14px; color: var(--text-muted); margin-top: -5px; }
+
+        /* --- MISSION CARD --- */
+        .mission-card {
+            margin: 0 20px 25px; padding: 25px 20px; border-radius: 20px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); position: relative; overflow: hidden;
+        }
+        .mission-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none; }
+        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .mission-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .mission-badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+        .mission-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 15px; }
+        .mission-btn { display: block; text-align: center; font-size: 14px; font-weight: 600; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
         
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 5px; font-weight: 600; }
-        .input-group input {
-            width: 100%; padding: 14px 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; color: #fff; font-size: 15px; outline: none; transition: 0.3s;
-        }
-        .input-group input:focus { border-color: #3b82f6; background: rgba(0, 0, 0, 0.5); }
-
-        .btn {
-            width: 100%; padding: 15px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            border: none; border-radius: 12px; color: white;
-            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); text-transform: uppercase; letter-spacing: 1px;
-        }
-        .btn:active { transform: scale(0.96); }
-        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
-        .btn-success { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4); }
-        .btn-purple { background: linear-gradient(135deg, #a855f7, #7e22ce); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.4); }
-
-        .switch-text { text-align: center; font-size: 14px; color: #94a3b8; margin-top: 20px; cursor: pointer; }
-        .switch-text span { color: #60a5fa; font-weight: 600; text-decoration: underline; }
-
-        /* Dashboard Boxes */
-        .box { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .box h3 { color: #cbd5e1; font-size: 16px; margin-bottom: 15px; font-weight: 600; }
-        .wallet-bal { font-size: 32px; font-weight: 800; color: #10b981; text-align: center; margin: 10px 0; }
+        /* --- MAIN GRID (POP NINJA STYLE) --- */
+        .section-title { font-size: 16px; font-weight: 600; color: #fff; margin: 0 20px 15px; display: flex; justify-content: space-between; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
         
-        .api-key-box { background: #0f172a; padding: 15px; border-radius: 10px; border: 1px dashed #475569; font-family: monospace; color: #38bdf8; font-size: 14px; margin-bottom: 10px; word-break: break-all; text-align:center;}
+        .grid-item {
+            background: var(--bg-card); border-radius: 20px; padding: 25px 15px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; cursor: pointer; transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .grid-item:active { transform: scale(0.95); }
+        .grid-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #fff; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        
+        .bg-teal { background: #14b8a6; } .bg-yellow { background: #f59e0b; }
+        .bg-purple { background: #8b5cf6; } .bg-red { background: #ef4444; }
+        .bg-orange { background: #f97316; } .bg-blue { background: #3b82f6; }
+        
+        .grid-text { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+
+        /* --- ADMIN PANEL (Hidden by default) --- */
+        .admin-box { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px; padding: 20px; margin: 0 20px 20px; }
+        .admin-box h3 { color: #fca5a5; margin-bottom: 15px; font-size: 16px; }
+
+        /* --- BOTTOM NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: var(--bg-card); display: flex; justify-content: space-around; align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.05); border-radius: 20px 20px 0 0; z-index: 100;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary-light); }
+        .nav-home-btn { 
+            width: 56px; height: 56px; background: var(--primary); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; color: #fff;
+            transform: translateY(-20px); box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5); border: 5px solid var(--bg-dark);
+        }
 
         .hidden { display: none !important; }
-        .msg-alert { font-size: 13px; text-align: center; margin-top: 15px; font-weight: 600; display: none; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <!-- 1. AUTH SECTION -->
-    <div class="container" id="authSection">
-        <h1 class="header-title" id="authTitle">User Login</h1>
-        
-        <div class="input-group">
-            <label>Telegram ID (Admin: 101)</label>
-            <input type="text" id="tgId" placeholder="Enter your ID">
-        </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="tgPass" placeholder="••••••••">
-        </div>
+    <!-- 1. AUTH SCREEN -->
+    <div id="authView">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Pop Ninja</h1>
+                <p style="font-size:13px; color:var(--text-muted);">Welcome back! Please login.</p>
+            </div>
+            
+            <div id="signupFields" class="hidden">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" placeholder="Enter your name">
+                </div>
+            </div>
 
-        <div id="captchaBox" class="hidden">
-            <label style="font-size: 13px; color: #94a3b8; display:block; margin-bottom: 5px;">Solve Math: <span id="mathQ" style="color:#60a5fa; font-weight:bold; font-size:16px;"></span></label>
-            <input type="number" id="mathAns" class="input-group" placeholder="Answer?">
-        </div>
-        
-        <button class="btn" id="authBtn" onclick="handleAuth()">Login Now</button>
-        <div id="authMsg" class="msg-alert"></div>
-        
-        <div class="switch-text" onclick="toggleAuthMode()">
-            <span id="toggleText">Create New Account</span>
+            <div class="input-group">
+                <label>Telegram User ID</label>
+                <input type="text" id="tgId" placeholder="e.g. 7335163273">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="tgPass" placeholder="••••••••">
+            </div>
+
+            <div id="captchaBox" class="hidden">
+                <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 5px;">Solve Math: <span id="mathQ" style="color:#818cf8; font-weight:bold; font-size:16px;"></span></label>
+                <input type="number" id="mathAns" class="input-group" placeholder="Answer?">
+            </div>
+
+            <p id="authError" style="color:#ef4444; font-size:13px; text-align:center; margin-bottom:10px; display:none;"></p>
+            <button class="btn" id="authBtn" onclick="handleAuth()">Login</button>
+            
+            <div class="switch-text" onclick="toggleAuth()">
+                <span id="toggleText">Create New Account</span>
+            </div>
         </div>
     </div>
 
-    <!-- 2. USER DASHBOARD -->
-    <div class="container hidden" id="userDashboard">
-        <h2 style="font-size: 22px; margin-bottom: 20px; color: #fff;">👋 Hello, User</h2>
+    <!-- 2. MAIN DASHBOARD VIEW -->
+    <div id="mainView" class="hidden">
         
-        <div class="box">
-            <h3>💳 My Wallet</h3>
-            <div class="wallet-bal">₹ <span id="userBalance">0</span></div>
+        <div class="dash-header">
+            <div>
+                <div class="dash-title">Pop Ninja <i class="fa-solid fa-user-ninja" style="color:#fbbf24;"></i></div>
+                <div class="user-greeting">Hi <span id="displayUserName">User</span> 👋</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 12px; color: var(--text-muted);">Balance</div>
+                <div style="font-size: 18px; font-weight: 700; color: #10b981;">₹ <span id="userBalanceDisplay">0.00</span></div>
+            </div>
         </div>
 
-        <!-- Dynamic Ads Button -->
-        <button id="btnWatchAd" class="btn btn-purple hidden" onclick="watchAd()">📺 Watch Ad & Earn</button>
-        <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
-
-        <div class="box">
-            <h3>🔗 Your Bot API Credentials</h3>
-            <p style="font-size: 12px; color: #94a3b8; margin-bottom: 10px;">Send this Token and Key to the Telegram bot to connect your account.</p>
-            <label style="font-size: 12px; color: #64748b;">User Token:</label>
-            <div class="api-key-box" id="userApiToken">Loading...</div>
-            <label style="font-size: 12px; color: #64748b;">Secret Key:</label>
-            <div class="api-key-box" id="userApiKey">Loading...</div>
+        <!-- Mission Card -->
+        <div class="mission-card">
+            <div class="mission-top">
+                <div class="mission-title"><i class="fa-solid fa-trophy"></i> Daily Mission</div>
+                <div class="mission-badge">0/4</div>
+            </div>
+            <div class="mission-sub">Complete mission & earn 501 extra coins</div>
+            <div class="mission-btn" onclick="alert('Missions locked. Complete previous tasks first!')">
+                <i class="fa-solid fa-circle-check"></i> View Daily Mission <i class="fa-solid fa-chevron-right" style="font-size:12px; margin-left:5px;"></i>
+            </div>
         </div>
 
-        <div class="box">
-            <h3>🎁 Claim Gift Code</h3>
-            <input type="text" id="claimCodeInput" placeholder="Enter Code" style="width: 100%; padding: 12px; border-radius: 8px; margin-bottom: 10px; outline:none; border:none; text-transform:uppercase;">
-            <button class="btn btn-success" style="padding: 10px;" onclick="claimGift()">Claim Reward</button>
+        <div class="section-title">
+            <span>Earn</span>
+            <span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">Keep grinding</span>
         </div>
 
-        <button class="btn btn-danger" onclick="logout()">Logout</button>
+        <!-- Grid Menu -->
+        <div class="grid-container">
+            <div class="grid-item" onclick="openModal('promoModal')">
+                <div class="grid-icon bg-teal"><i class="fa-solid fa-ticket-simple"></i></div>
+                <div class="grid-text">Promo Code</div>
+            </div>
+            <div class="grid-item" onclick="claimDaily()">
+                <div class="grid-icon bg-yellow"><i class="fa-solid fa-gift"></i></div>
+                <div class="grid-text">Daily Bonus</div>
+            </div>
+            <div class="grid-item" onclick="alert('Bubble Pop Game Coming Soon!')">
+                <div class="grid-icon bg-purple"><i class="fa-solid fa-circle-nodes"></i></div>
+                <div class="grid-text">Bubble Pop</div>
+            </div>
+            <div class="grid-item" onclick="alert('Fruit Ninja Game Coming Soon!')">
+                <div class="grid-icon bg-red"><i class="fa-brands fa-apple"></i></div>
+                <div class="grid-text">Fruit Ninja</div>
+            </div>
+            <div class="grid-item" id="watchAdBox" style="grid-column: span 2;" onclick="watchAd()">
+                <div class="grid-icon bg-orange"><i class="fa-solid fa-play"></i></div>
+                <div class="grid-text">Watch & Earn <br><span style="font-size:11px; color:#10b981;" id="adRewardText">₹0.00</span></div>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL (Only visible to 101) -->
+        <div id="adminPanel" class="hidden">
+            <div class="section-title"><span>Admin Controls</span></div>
+            <div class="admin-box">
+                <h3>📺 Ads Configuration</h3>
+                <div class="input-group">
+                    <label>Ad URL Link</label>
+                    <input type="text" id="adminAdLink" placeholder="https://...">
+                </div>
+                <div class="input-group">
+                    <label>Reward per view (e.g. 0.10)</label>
+                    <input type="number" step="0.01" id="adminAdReward" placeholder="0.10">
+                </div>
+                <button class="btn btn-green" onclick="saveAdminSettings()">Save Settings</button>
+            </div>
+            
+            <div class="admin-box">
+                <h3>⚙️ Ultra-Pay API Config</h3>
+                <div class="input-group">
+                    <label>Admin Tax (%)</label>
+                    <input type="number" id="adminTax" placeholder="e.g. 10">
+                </div>
+                <p style="font-size:11px; color:#94a3b8; margin-bottom:10px;">User Payout API requests are processed via the backend bot for security.</p>
+                <button class="btn btn-green" onclick="saveApiSettings()">Save API Config</button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="openRefer()"><i class="fa-solid fa-users"></i> Refer</div>
+            <div class="nav-item"><i class="fa-solid fa-trophy"></i> Leaderboard</div>
+            <div class="nav-home-btn" onclick="goHome()"><i class="fa-solid fa-house" style="font-size: 22px;"></i></div>
+            <div class="nav-item" onclick="openWallet()"><i class="fa-solid fa-wallet"></i> Wallet</div>
+            <div class="nav-item" onclick="openProfile()"><i class="fa-solid fa-user"></i> Profile</div>
+        </div>
     </div>
 
-    <!-- 3. ADMIN DASHBOARD -->
-    <div class="container hidden" id="adminDashboard">
-        <h2 style="font-size: 24px; margin-bottom: 20px; color: #ef4444;">👑 Master Admin</h2>
-        
-        <div class="box" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3);">
-            <h3>🤖 Master Bot Setup</h3>
-            <div class="input-group">
-                <label>Telegram Bot Token (From BotFather)</label>
-                <input type="text" id="adminBotToken" placeholder="12345:ABCDefgh...">
-            </div>
-            <button class="btn" onclick="saveMasterBot()">Save Bot Token</button>
+    <!-- Modals -->
+    <div id="promoModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom:15px; color:#818cf8;">🎁 Enter Promo Code</h3>
+            <input type="text" id="promoInput" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none; outline:none; text-transform:uppercase;" placeholder="Code">
+            <button class="btn btn-green" onclick="claimPromo()">Claim Code</button>
+            <button class="btn" style="background:transparent; color:#94a3b8; margin-top:10px; box-shadow:none;" onclick="closeModal('promoModal')">Cancel</button>
         </div>
-
-        <div class="box">
-            <h3>📺 Setup Ads (Earn System)</h3>
-            <p style="font-size: 11px; color:#94a3b8; margin-bottom:10px;">If link is empty, the Ad button will be hidden for users.</p>
-            <div class="input-group">
-                <label>Ad URL (Link)</label>
-                <input type="url" id="adminAdLink" placeholder="https://...">
-            </div>
-            <div class="input-group">
-                <label>Reward per view (₹)</label>
-                <input type="number" id="adminAdReward" placeholder="e.g. 5">
-            </div>
-            <button class="btn btn-purple" onclick="saveAdConfig()">Save Ads Settings</button>
-        </div>
-
-        <div class="box">
-            <h3>🎁 Create Gift Code</h3>
-            <div class="input-group">
-                <label>Code Name</label>
-                <input type="text" id="adminGiftName" style="text-transform: uppercase;">
-            </div>
-            <div class="input-group">
-                <label>Reward Amount (₹)</label>
-                <input type="number" id="adminGiftReward">
-            </div>
-            <button class="btn btn-success" onclick="createGift()">Create Code</button>
-        </div>
-
-        <button class="btn btn-danger" onclick="logout()">Logout</button>
     </div>
 
-    <!-- Firebase Script (TUZI NEW CONFIG) -->
+    <div id="profileModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom:15px; color:#818cf8;">👤 Profile Info</h3>
+            <p style="font-size:13px; color:#cbd5e1; margin-bottom:10px;">Share these details to Bot to link your account.</p>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:10px;">
+                <span style="font-size:11px; color:#94a3b8;">User Token</span><br>
+                <strong id="pToken" style="color:#10b981; font-family:monospace;">---</strong>
+            </div>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:15px;">
+                <span style="font-size:11px; color:#94a3b8;">Secret Key</span><br>
+                <strong id="pKey" style="color:#f59e0b; font-family:monospace;">---</strong>
+            </div>
+            <button class="btn" style="background:#ef4444;" onclick="logout()">Log Out</button>
+            <button class="btn" style="background:transparent; color:#94a3b8; margin-top:10px; box-shadow:none;" onclick="closeModal('profileModal')">Close</button>
+        </div>
+    </div>
+
+    <div id="walletModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom:15px; color:#818cf8;">💳 Wallet & Withdrawal</h3>
+            <h1 style="color:#10b981; margin-bottom:10px;">₹ <span id="wBalance">0.00</span></h1>
+            <p style="font-size:12px; color:#cbd5e1; margin-bottom:15px; line-height:1.5;">To protect your funds via Ultra-Pay API, all withdrawal requests must be initiated directly inside our <b>Telegram Bot</b>.</p>
+            <button class="btn" style="background:transparent; color:#94a3b8; border:1px solid #94a3b8; box-shadow:none;" onclick="closeModal('walletModal')">Close</button>
+        </div>
+    </div>
+
+    <div id="referModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom:15px; color:#818cf8;">👥 Refer API Hub</h3>
+            <p style="font-size:12px; color:#cbd5e1; margin-bottom:15px; line-height:1.5;">Share your unique Bot invite link. When friends join and use your code, you earn automatically via Refer API!</p>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:15px;">
+                <span style="font-size:11px; color:#94a3b8;">Your Code</span><br>
+                <strong id="referCodeTxt" style="color:#f59e0b; font-size:18px;">---</strong>
+            </div>
+            <button class="btn" style="background:transparent; color:#94a3b8; border:1px solid #94a3b8; box-shadow:none;" onclick="closeModal('referModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Tuzi Config (Added databaseURL)
         const firebaseConfig = {
           apiKey: "AIzaSyDkmoIzcYsYTBYwIk2A_8hUXWW5znyeTaY",
           authDomain: "newkumarbot.firebaseapp.com",
@@ -191,205 +308,183 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let isLoginMode = true;
-        let captchaAns = 0;
-        let currentUserId = "";
-        let globalAdConfig = { link: "", reward: 0 };
+        let isLogin = true;
+        let cAns = 0;
+        let currUser = "";
+        let sysAds = { link: "", reward: 0.00 };
 
-        // Generate Random User Token & Key
-        function generateId(length) {
-            let result = '';
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            for (let i = 0; i < length; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
-            return result;
+        function genStr(l) {
+            let r = ''; const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (let i = 0; i < l; i++) r += c.charAt(Math.floor(Math.random() * c.length));
+            return r;
         }
 
-        window.toggleAuthMode = function() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('authTitle').innerText = isLoginMode ? "User Login" : "Create Account";
-            document.getElementById('authBtn').innerText = isLoginMode ? "Login Now" : "Sign Up & Verify";
-            document.getElementById('toggleText').innerText = isLoginMode ? "Create New Account" : "Already have an account? Login";
+        window.toggleAuth = () => {
+            isLogin = !isLogin;
+            document.getElementById('signupFields').classList.toggle('hidden');
+            document.getElementById('captchaBox').classList.toggle('hidden');
+            document.getElementById('authBtn').innerText = isLogin ? "Login" : "Create Account";
+            document.getElementById('toggleText').innerText = isLogin ? "Create New Account" : "Back to Login";
             
-            if(isLoginMode) {
-                document.getElementById('captchaBox').classList.add('hidden');
-            } else {
-                document.getElementById('captchaBox').classList.remove('hidden');
-                let n1 = Math.floor(Math.random() * 10) + 1;
-                let n2 = Math.floor(Math.random() * 10) + 1;
-                captchaAns = n1 + n2;
-                document.getElementById('mathQ').innerText = `${n1} + ${n2}`;
-                document.getElementById('mathAns').value = "";
+            if(!isLogin) {
+                let n1 = Math.floor(Math.random() * 10) + 1; let n2 = Math.floor(Math.random() * 10) + 1;
+                cAns = n1 + n2; document.getElementById('mathQ').innerText = `${n1} + ${n2} =`;
             }
-            document.getElementById('authMsg').style.display = "none";
         };
 
-        function showMsg(text, isError = true) {
-            let msg = document.getElementById('authMsg');
-            msg.style.display = "block";
-            msg.style.color = isError ? "#ef4444" : "#10b981";
-            msg.innerText = text;
-            
-            // Reset Button text
-            document.getElementById('authBtn').innerText = isLoginMode ? "Login Now" : "Sign Up & Verify";
+        function eMsg(txt) {
+            let e = document.getElementById('authError');
+            e.style.display = 'block'; e.innerText = txt;
         }
 
-        window.handleAuth = async function() {
+        window.handleAuth = async () => {
             let id = document.getElementById('tgId').value.trim();
             let pass = document.getElementById('tgPass').value;
-            let btn = document.getElementById('authBtn');
+            if(!id || !pass) return eMsg("Enter ID and Password!");
 
-            if(!id || !pass) return showMsg("Please enter ID and Password!");
-
-            // 👑 Admin Login 
             if(id === "101" && pass === "90901") {
-                currentUserId = "ADMIN";
-                document.getElementById('authSection').classList.add('hidden');
-                document.getElementById('adminDashboard').classList.remove('hidden');
-                loadAdminData();
-                return;
+                currUser = "ADMIN"; return openDash(id, { name: "Master Admin" });
             }
-
-            btn.innerText = "PROCESSING...";
 
             try {
-                const userRef = ref(db, 'bot_users/' + id);
-
-                if(!isLoginMode) {
-                    // SIGN UP
+                let uRef = ref(db, 'pop_users/' + id);
+                if(!isLogin) {
+                    let name = document.getElementById('regName').value.trim();
                     let mAns = parseInt(document.getElementById('mathAns').value);
-                    if(mAns !== captchaAns) return showMsg("Wrong Math Answer!");
+                    if(!name) return eMsg("Enter Name!");
+                    if(mAns !== cAns) return eMsg("Wrong Math!");
+                    let s = await get(uRef); if(s.exists()) return eMsg("ID Exists! Please login.");
                     
-                    let snap = await get(userRef);
-                    if(snap.exists()) return showMsg("Account already exists! Please login.");
-                    
-                    // Create new user with API Tokens
-                    let newUser = {
-                        password: pass,
-                        balance: 0,
-                        api_token: "USR-" + generateId(8),
-                        api_key: "KEY-" + generateId(12)
-                    };
-                    
-                    await set(userRef, newUser);
-                    openUserDashboard(id, newUser);
+                    let nUser = { name: name, pass: pass, bal: 0.00, tok: "PN-"+genStr(6), key: "K-"+genStr(10) };
+                    await set(uRef, nUser); openDash(id, nUser);
                 } else {
-                    // LOGIN
-                    let snap = await get(userRef);
-                    if(!snap.exists()) return showMsg("Account not found!");
-                    
-                    let userData = snap.val();
-                    if(userData.password !== pass) return showMsg("Incorrect Password!");
-                    
-                    openUserDashboard(id, userData);
+                    let s = await get(uRef); if(!s.exists()) return eMsg("User not found!");
+                    let d = s.val(); if(d.pass !== pass) return eMsg("Wrong Password!");
+                    openDash(id, d);
                 }
-            } catch (error) {
-                // If Database fails (e.g., rules error), reset button
-                showMsg("Database Error! Check Firebase Rules.");
-                console.error(error);
-            }
+            } catch(e) { eMsg("Database Error! Check Rules."); }
         };
 
-        function openUserDashboard(id, data) {
-            currentUserId = id;
-            document.getElementById('authSection').classList.add('hidden');
-            document.getElementById('userDashboard').classList.remove('hidden');
-            
-            document.getElementById('userApiToken').innerText = data.api_token;
-            document.getElementById('userApiKey').innerText = data.api_key;
-            
-            onValue(ref(db, 'bot_users/' + id + '/balance'), (snap) => {
-                document.getElementById('userBalance').innerText = snap.val() || 0;
-            });
+        function openDash(id, data) {
+            currUser = id;
+            document.getElementById('authView').classList.add('hidden');
+            document.getElementById('mainView').classList.remove('hidden');
+            document.getElementById('displayUserName').innerText = data.name || id;
 
-            onValue(ref(db, 'admin/adsConfig'), (snap) => {
+            if(id === "ADMIN") {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                get(ref(db, 'admin_settings')).then(s => {
+                    if(s.exists()) {
+                        let ad = s.val();
+                        if(ad.ads) {
+                            document.getElementById('adminAdLink').value = ad.ads.link || "";
+                            document.getElementById('adminAdReward').value = ad.ads.reward || "";
+                        }
+                        if(ad.api) document.getElementById('adminTax').value = ad.api.tax || "";
+                    }
+                });
+            } else {
+                document.getElementById('pToken').innerText = data.tok;
+                document.getElementById('pKey').innerText = data.key;
+                document.getElementById('referCodeTxt').innerText = data.tok;
+                
+                onValue(ref(db, 'pop_users/' + id + '/bal'), (snap) => {
+                    let b = parseFloat(snap.val() || 0).toFixed(2);
+                    document.getElementById('userBalanceDisplay').innerText = b;
+                    document.getElementById('wBalance').innerText = b;
+                });
+            }
+
+            onValue(ref(db, 'admin_settings/ads'), (snap) => {
                 if(snap.exists()) {
-                    globalAdConfig = snap.val();
-                    let adBtn = document.getElementById('btnWatchAd');
-                    if(globalAdConfig.link && globalAdConfig.link.trim() !== "") {
-                        adBtn.classList.remove('hidden');
-                        adBtn.innerText = `📺 Watch Ad (Earn ₹${globalAdConfig.reward})`;
+                    sysAds = snap.val();
+                    let amt = parseFloat(sysAds.reward || 0).toFixed(2);
+                    if(sysAds.link) {
+                        document.getElementById('adRewardText').innerText = `₹${amt}`;
                     } else {
-                        adBtn.classList.add('hidden');
+                        document.getElementById('watchAdBox').classList.add('hidden');
                     }
                 }
             });
         }
 
-        window.watchAd = function() {
-            if(!globalAdConfig.link) return;
-            window.open(globalAdConfig.link, '_blank');
-            
+        window.watchAd = () => {
+            if(!sysAds.link) return;
+            window.open(sysAds.link, '_blank');
+            if(currUser === "ADMIN") return;
             setTimeout(async () => {
-                let snap = await get(ref(db, 'bot_users/' + currentUserId + '/balance'));
-                let curBal = snap.val() || 0;
-                await update(ref(db, 'bot_users/' + currentUserId), { balance: curBal + parseInt(globalAdConfig.reward) });
-                alert(`🎉 You earned ₹${globalAdConfig.reward} from Ads!`);
+                let s = await get(ref(db, 'pop_users/' + currUser + '/bal'));
+                let cb = parseFloat(s.val() || 0);
+                let reward = parseFloat(sysAds.reward);
+                let newBal = (cb + reward).toFixed(2);
+                await update(ref(db, 'pop_users/' + currUser), { bal: parseFloat(newBal) });
+                alert(`🎉 You earned ₹${reward.toFixed(2)} from Ads!`);
             }, 3000);
         };
 
-        window.claimGift = async function() {
-            let code = document.getElementById('claimCodeInput').value.trim().toUpperCase();
+        window.claimPromo = async () => {
+            let code = document.getElementById('promoInput').value.trim().toUpperCase();
             if(!code) return alert("Enter code!");
+            if(currUser === "ADMIN") return alert("Admin cannot claim.");
             
-            let snap = await get(ref(db, 'admin/giftCodes/' + code));
-            if(!snap.exists()) return alert("❌ Invalid or Expired Code!");
+            let s = await get(ref(db, 'admin_settings/promo/' + code));
+            if(!s.exists()) return alert("❌ Invalid Code!");
             
-            let giftData = snap.val();
-            let usedSnap = await get(ref(db, 'bot_users/' + currentUserId + '/usedGifts/' + code));
-            if(usedSnap.exists()) return alert("❌ You already claimed this code!");
-
-            let balSnap = await get(ref(db, 'bot_users/' + currentUserId + '/balance'));
-            let newBal = (balSnap.val() || 0) + parseInt(giftData.reward);
+            let d = s.val();
+            let u = await get(ref(db, 'pop_users/' + currUser + '/usedP/' + code));
+            if(u.exists()) return alert("❌ Already Claimed!");
             
-            let updates = {};
-            updates['bot_users/' + currentUserId + '/balance'] = newBal;
-            updates['bot_users/' + currentUserId + '/usedGifts/' + code] = true;
+            let b = await get(ref(db, 'pop_users/' + currUser + '/bal'));
+            let nB = (parseFloat(b.val() || 0) + parseFloat(d.reward)).toFixed(2);
             
-            await update(ref(db), updates);
-            document.getElementById('claimCodeInput').value = "";
-            alert(`🎁 Success! ₹${giftData.reward} added to your wallet!`);
+            let upd = {};
+            upd['pop_users/' + currUser + '/bal'] = parseFloat(nB);
+            upd['pop_users/' + currUser + '/usedP/' + code] = true;
+            await update(ref(db), upd);
+            
+            closeModal('promoModal');
+            alert(`🎁 Success! ₹${parseFloat(d.reward).toFixed(2)} added!`);
         };
 
-        async function loadAdminData() {
-            let snap = await get(ref(db, 'admin'));
-            if(snap.exists()) {
-                let data = snap.val();
-                if(data.masterBotToken) document.getElementById('adminBotToken').value = data.masterBotToken;
-                if(data.adsConfig) {
-                    document.getElementById('adminAdLink').value = data.adsConfig.link || "";
-                    document.getElementById('adminAdReward').value = data.adsConfig.reward || "";
-                }
-            }
-        }
-
-        window.saveMasterBot = function() {
-            let token = document.getElementById('adminBotToken').value.trim();
-            update(ref(db, 'admin'), { masterBotToken: token }).then(() => alert("✅ Master Bot Token Saved!"));
+        window.claimDaily = async () => {
+            if(currUser === "ADMIN") return;
+            let last = await get(ref(db, 'pop_users/' + currUser + '/lastDaily'));
+            let now = new Date().toDateString();
+            if(last.exists() && last.val() === now) return alert("❌ Already claimed today. Come back tomorrow!");
+            
+            let b = await get(ref(db, 'pop_users/' + currUser + '/bal'));
+            let nB = (parseFloat(b.val() || 0) + 0.50).toFixed(2); // Fix daily reward
+            
+            let upd = {};
+            upd['pop_users/' + currUser + '/bal'] = parseFloat(nB);
+            upd['pop_users/' + currUser + '/lastDaily'] = now;
+            await update(ref(db), upd);
+            alert("🎁 Daily Bonus ₹0.50 Added!");
         };
 
-        window.saveAdConfig = function() {
-            let link = document.getElementById('adminAdLink').value.trim();
-            let reward = parseInt(document.getElementById('adminAdReward').value) || 0;
-            
-            update(ref(db, 'admin/adsConfig'), { link: link, reward: reward }).then(() => {
-                alert(link ? "✅ Ads Activated globally!" : "🚫 Ads disabled globally (Link removed).");
-            });
+        // ADMIN SAVES
+        window.saveAdminSettings = () => {
+            let l = document.getElementById('adminAdLink').value.trim();
+            let r = parseFloat(document.getElementById('adminAdReward').value || 0).toFixed(2);
+            update(ref(db, 'admin_settings/ads'), { link: l, reward: parseFloat(r) }).then(()=>alert("✅ Ads Saved!"));
+        };
+        
+        window.saveApiSettings = () => {
+            let tax = parseFloat(document.getElementById('adminTax').value || 0);
+            update(ref(db, 'admin_settings/api'), { tax: tax }).then(()=>alert("✅ API Tax Config Saved!"));
         };
 
-        window.createGift = function() {
-            let code = document.getElementById('adminGiftName').value.trim().toUpperCase();
-            let reward = parseInt(document.getElementById('adminGiftReward').value);
-            
-            if(!code || !reward) return alert("Fill both fields!");
-            
-            set(ref(db, 'admin/giftCodes/' + code), { reward: reward }).then(() => {
-                document.getElementById('adminGiftName').value = "";
-                document.getElementById('adminGiftReward').value = "";
-                alert(`✅ Gift Code [${code}] Created!`);
-            });
+        // MODAL HANDLERS
+        window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
+        window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
+        window.openProfile = () => { if(currUser!=="ADMIN") openModal('profileModal'); else alert("Admin Profile Blocked."); };
+        window.openWallet = () => { if(currUser!=="ADMIN") openModal('walletModal'); else alert("Admin Wallet Blocked."); };
+        window.openRefer = () => { if(currUser!=="ADMIN") openModal('referModal'); else alert("Admin Refer Blocked."); };
+        window.goHome = () => {
+            document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
         };
 
-        window.logout = function() { location.reload(); };
+        window.logout = () => location.reload();
     </script>
 </body>
 </html>
