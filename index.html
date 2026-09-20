@@ -3,155 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NovaPay - Premium Dashboard</title>
+    <title>NovaPay - Ultimate Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 
         :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
+            --bg-dark: #0a0f1d;
+            --bg-card: #151e32;
             --primary: #3b82f6;
-            --primary-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --primary-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6, #d946ef);
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --text-muted: #64748b;
+            --glass-bg: rgba(21, 30, 50, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.05);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex; flex-direction: column;
-            overflow-x: hidden;
-            padding-bottom: 90px;
-        }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; padding-bottom: 90px; }
 
-        /* custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
         /* --- TOAST NOTIFICATION --- */
-        #toastBox { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: var(--bg-card); border-left: 4px solid var(--primary); padding: 15px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 500; animation: slideIn 0.3s ease forwards; display: flex; align-items: center; gap: 10px; }
+        #toastBox { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--bg-card); border-left: 4px solid var(--primary); padding: 15px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 600; animation: slideIn 0.3s ease forwards; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(10px); }
         .toast.error { border-left-color: var(--danger); }
         .toast.success { border-left-color: var(--success); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* --- AUTH SCREEN --- */
-        .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
-        .auth-container { width: 100%; max-width: 420px; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 35px 25px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; background: radial-gradient(circle at top left, #1e293b 0%, #0a0f1d 100%); }
+        .auth-container { width: 100%; max-width: 420px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 40px 30px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transition: 0.5s; }
         .auth-header { text-align: center; margin-bottom: 30px; }
-        .auth-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-        .input-group input { width: 100%; padding: 15px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
-        .btn { width: 100%; padding: 16px; background: var(--primary-gradient); border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); text-transform: uppercase; letter-spacing: 1px; }
-        .btn:active { transform: scale(0.97); }
-        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
-        .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
-        .switch-text { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 25px; cursor: pointer; }
-        .switch-text span { color: var(--primary); font-weight: 700; }
+        .auth-header h1 { font-size: 38px; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .input-group input { width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.4); border: 2px solid transparent; border-radius: 16px; color: #fff; font-size: 16px; font-weight: 500; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
+        
+        .btn { width: 100%; padding: 18px; background: var(--primary-gradient); border: none; border-radius: 16px; color: white; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); text-transform: uppercase; letter-spacing: 1.5px; }
+        .btn:active { transform: scale(0.95); }
+        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); }
+        .btn-red { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); }
+        .btn-dark { background: #1e293b; box-shadow: none; border: 1px solid #334155; }
+        
+        .switch-text { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 25px; cursor: pointer; font-weight: 500; }
+        .switch-text span { color: var(--primary); font-weight: 800; text-decoration: none; position: relative; }
+        .switch-text span::after { content: ''; position: absolute; width: 100%; height: 2px; bottom: -2px; left: 0; background: var(--primary); transform: scaleX(0); transition: 0.3s; }
+        .switch-text:hover span::after { transform: scaleX(1); }
+
+        #captchaBox { background: rgba(59, 130, 246, 0.05); padding: 15px; border-radius: 16px; border: 1px dashed rgba(59, 130, 246, 0.3); margin-bottom: 20px; }
+        
+        /* --- BANNED SCREEN --- */
+        .banned-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background: #000; padding: 30px; text-align: center; }
+        .banned-screen i { font-size: 80px; color: var(--danger); margin-bottom: 20px; text-shadow: 0 0 30px rgba(239,68,68,0.5); }
+        .banned-screen h1 { font-size: 30px; color: #fff; margin-bottom: 10px; }
+        .banned-screen p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
 
         /* --- DASHBOARD HEADER --- */
-        .dash-header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(30,41,59,0.8), transparent); }
-        .dash-title { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .user-greeting { font-size: 14px; color: var(--text-muted); }
-        .bal-box { text-align: right; background: rgba(16, 185, 129, 0.1); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2); }
-        .bal-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .bal-amount { font-size: 20px; font-weight: 800; color: var(--success); }
+        .dash-header { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(15,23,29,0.9), transparent); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
+        .dash-title { font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .user-greeting { font-size: 15px; color: var(--text-muted); font-weight: 500; }
+        .bal-box { text-align: right; background: rgba(16, 185, 129, 0.1); padding: 10px 18px; border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 5px 15px rgba(16,185,129,0.1); cursor: pointer; transition: 0.3s; }
+        .bal-box:hover { transform: translateY(-3px); }
+        .bal-label { font-size: 11px; color: var(--success); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.8; }
+        .bal-amount { font-size: 22px; font-weight: 900; color: var(--success); }
 
         /* --- MISSION CARD --- */
-        .mission-card { margin: 0 20px 25px; padding: 25px; border-radius: 24px; background: var(--primary-gradient); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3); position: relative; overflow: hidden; }
-        .mission-card::after { content: ''; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; transform: translate(30%, -30%); }
-        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; z-index: 2; }
-        .mission-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .mission-badge { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
-        .mission-sub { font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 20px; position: relative; z-index: 2; }
-        .mission-btn { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px); }
+        .mission-card { margin: 0 20px 30px; padding: 30px 25px; border-radius: 30px; background: var(--primary-gradient); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3); position: relative; overflow: hidden; }
+        .mission-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; position: relative; z-index: 2; }
+        .mission-title { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .mission-badge { background: rgba(0,0,0,0.3); padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: 800; backdrop-filter: blur(5px); }
+        .mission-sub { font-size: 14px; color: rgba(255,255,255,0.9); margin-bottom: 25px; position: relative; z-index: 2; font-weight: 500; line-height: 1.5; }
+        .mission-btn { background: rgba(255,255,255,0.25); padding: 15px; border-radius: 16px; text-align: center; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; }
+        .mission-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
 
         /* --- MAIN GRID --- */
-        .section-title { font-size: 18px; font-weight: 700; color: #fff; margin: 0 20px 15px; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
-        .grid-item { background: var(--bg-card); border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .section-title { font-size: 20px; font-weight: 800; color: #fff; margin: 0 20px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 0 20px 20px; }
+        .grid-item { background: var(--bg-card); border-radius: 24px; padding: 30px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .grid-item::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%); pointer-events: none; }
         .grid-item:active { transform: scale(0.95); }
-        .grid-icon { width: 55px; height: 55px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 26px; color: #fff; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .grid-icon { width: 65px; height: 65px; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 28px; color: #fff; margin-bottom: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.3s; }
+        .grid-item:hover .grid-icon { transform: translateY(-5px); }
         
         .bg-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
         .bg-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .bg-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
         .bg-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
         .bg-orange { background: linear-gradient(135deg, #f97316, #c2410c); }
+        .bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
         
-        .grid-text { font-size: 15px; font-weight: 600; color: #e2e8f0; }
-        .ad-amt { font-size: 12px; color: var(--success); font-weight: 800; background: rgba(16,185,129,0.1); padding: 2px 8px; border-radius: 10px; margin-top: 5px; display: inline-block; }
+        .grid-text { font-size: 16px; font-weight: 700; color: #e2e8f0; }
+        .ad-amt { font-size: 13px; color: #fff; font-weight: 800; background: var(--success); padding: 4px 10px; border-radius: 12px; margin-top: 8px; display: inline-block; box-shadow: 0 4px 10px rgba(16,185,129,0.3); }
 
         /* --- ADMIN PANEL --- */
-        .admin-section { padding: 0 20px 20px; }
-        .admin-box { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
-        .admin-box h3 { color: #fca5a5; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid rgba(239,68,68,0.2); padding-bottom: 10px; }
+        .admin-section { padding: 0 20px 30px; }
+        .admin-box { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 24px; padding: 30px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .admin-box h3 { color: #fca5a5; margin-bottom: 25px; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; border-bottom: 1px dashed rgba(239,68,68,0.2); padding-bottom: 15px; }
         .admin-row { display: flex; gap: 15px; margin-bottom: 15px;}
         .admin-row .input-group { flex: 1; margin-bottom: 0; }
 
         /* --- BOTTOM NAVIGATION (PROFILE IN CENTER) --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); z-index: 100; border-radius: 30px 30px 0 0; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.3s; flex: 1; }
-        .nav-item i { font-size: 22px; margin-bottom: 6px; transition: 0.3s; }
-        .nav-item:hover i { color: #fff; transform: translateY(-3px); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; background: rgba(15, 23, 29, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--glass-border); z-index: 100; border-radius: 35px 35px 0 0; padding: 0 10px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; position: relative; }
+        .nav-item i { font-size: 24px; margin-bottom: 6px; transition: 0.3s; }
+        .nav-item:hover { color: #fff; }
+        .nav-item:hover i { transform: translateY(-4px); }
         .nav-item.active { color: var(--primary); }
+        .nav-item.active i { filter: drop-shadow(0 0 10px rgba(59,130,246,0.5)); }
         
-        /* THE CENTER PROFILE BUTTON */
         .nav-center-wrapper { position: relative; flex: 1; display: flex; justify-content: center; }
         .nav-center-btn { 
-            position: absolute; top: -35px; width: 70px; height: 70px;
+            position: absolute; top: -45px; width: 75px; height: 75px;
             background: var(--primary-gradient); border-radius: 50%;
             display: flex; justify-content: center; align-items: center; color: #fff;
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
-            border: 6px solid var(--bg-dark); cursor: pointer; transition: 0.3s;
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
+            border: 8px solid var(--bg-dark); cursor: pointer; transition: 0.3s;
         }
-        .nav-center-btn i { font-size: 26px; }
+        .nav-center-btn i { font-size: 30px; }
         .nav-center-btn:active { transform: scale(0.9); }
-        .nav-center-text { position: absolute; bottom: -20px; font-size: 11px; font-weight: 600; color: var(--text-muted); }
+        .nav-center-text { position: absolute; bottom: -20px; font-size: 12px; font-weight: 700; color: var(--text-muted); }
 
-        /* --- MODALS (SPA) --- */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); z-index: 999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 0; pointer-events: none; transition: 0.3s; }
+        /* --- MODALS (FULL SCREEN & POPUPS) --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 15, 29, 0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .modal.show { opacity: 1; pointer-events: all; }
-        .modal-content { background: var(--bg-card); padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); transform: translateY(20px); transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .modal.show .modal-content { transform: translateY(0); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .modal-header h3 { font-size: 20px; color: #fff; }
-        .close-btn { background: rgba(255,255,255,0.1); border: none; width: 35px; height: 35px; border-radius: 50%; color: #fff; cursor: pointer; }
+        .modal-content { background: var(--bg-card); padding: 35px 30px; border-radius: 30px; width: 90%; max-width: 450px; border: 1px solid var(--glass-border); transform: translateY(50px) scale(0.9); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 30px 60px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
+        .modal.show .modal-content { transform: translateY(0) scale(1); }
         
-        .history-list { max-height: 300px; overflow-y: auto; }
-        .history-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
-        .hi-title { font-size: 14px; font-weight: 600; color: #fff; }
-        .hi-date { font-size: 11px; color: var(--text-muted); }
-        .hi-amt { font-size: 16px; font-weight: 700; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .modal-header h3 { font-size: 24px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: var(--text-muted); cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; font-size: 18px; }
+        .close-btn:hover { background: rgba(239,68,68,0.2); color: var(--danger); border-color: rgba(239,68,68,0.3); transform: rotate(90deg); }
+        
+        .history-list { max-height: 400px; overflow-y: auto; padding-right: 5px; }
+        .history-item { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); transition: 0.3s; }
+        .history-item:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); }
+        .hi-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+        .hi-date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .hi-amt { font-size: 18px; font-weight: 900; }
         .hi-plus { color: var(--success); }
         .hi-minus { color: var(--danger); }
 
-        .api-box { background: #020617; padding: 15px; border-radius: 12px; border: 1px dashed #334155; font-family: monospace; color: #38bdf8; font-size: 14px; margin-bottom: 15px; word-break: break-all; user-select: all; text-align: center; letter-spacing: 1px; }
+        .api-box { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.2); font-family: monospace; color: #38bdf8; font-size: 16px; font-weight: 600; margin-bottom: 20px; word-break: break-all; user-select: all; text-align: center; letter-spacing: 1px; }
+        
+        /* --- SUPPORT AI CHAT UI --- */
+        .chat-container { display: flex; flex-direction: column; height: 400px; background: rgba(0,0,0,0.2); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
+        .chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 12px 18px; border-radius: 18px; font-size: 14px; font-weight: 500; line-height: 1.5; animation: slideIn 0.3s; }
+        .msg.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .msg.ai { background: rgba(255,255,255,0.1); color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--glass-border); }
+        .chat-input-area { display: flex; padding: 15px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--glass-border); gap: 10px; }
+        .chat-input-area input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 20px; color: #fff; outline: none; font-size: 14px; }
+        .chat-input-area button { background: var(--primary-gradient); border: none; width: 45px; height: 45px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        .chat-input-area button:hover { transform: scale(1.1); }
+        .typing-indicator { font-size: 12px; color: var(--primary); font-weight: 600; padding-left: 10px; display: none; }
 
         .hidden-view { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- TOAST ALERTS -->
     <div id="toastBox"></div>
 
-    <!-- 1. AUTH SCREEN -->
+    <!-- 1. BANNED SCREEN -->
+    <div id="bannedView" class="banned-screen hidden-view">
+        <i class="fa-solid fa-ban"></i>
+        <h1>Account Banned</h1>
+        <p>This account was logged into a device that is already registered to another user.<br><br><b>Strict Policy: 1 Device = 1 User.</b><br>Your account has been permanently suspended.</p>
+    </div>
+
+    <!-- 2. AUTH SCREEN -->
     <div id="authView" class="auth-wrapper">
         <div class="auth-container">
             <div class="auth-header">
-                <h1>NovaPay Pro</h1>
-                <p style="font-size:14px; color:var(--text-muted); margin-top:5px;">Secure Bot Payment Gateway</p>
+                <h1 id="authMainTitle">NovaPay</h1>
+                <p id="authSubTitle" style="font-size:14px; color:var(--text-muted); margin-top:5px;">Secure Bot Payment Gateway</p>
             </div>
             
             <div id="signupFields" class="hidden-view">
@@ -175,27 +210,27 @@
             </div>
 
             <div id="captchaBox" class="hidden-view">
-                <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 8px;">Human Verification: <span id="mathQ" style="color:var(--primary); font-weight:800; font-size:18px;"></span></label>
+                <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 8px;">Human Verification: <span id="mathQ" style="color:var(--primary); font-weight:900; font-size:20px;"></span></label>
                 <input type="number" id="mathAns" class="input-group" placeholder="Answer?">
             </div>
 
             <button class="btn" id="authBtn" onclick="handleAuth()">Login Securely</button>
             
-            <div class="switch-text" onclick="toggleAuth()">
+            <div class="switch-text" onclick="toggleAuthBtn()">
                 <span id="toggleText">Create New Account</span>
             </div>
         </div>
     </div>
 
-    <!-- 2. MAIN DASHBOARD VIEW -->
+    <!-- 3. MAIN DASHBOARD VIEW -->
     <div id="mainView" class="hidden-view">
         
         <div class="dash-header">
             <div>
                 <div class="dash-title">NovaPay <i class="fa-solid fa-bolt" style="color:var(--warning);"></i></div>
-                <div class="user-greeting">Welcome back, <span id="displayUserName" style="color:#fff; font-weight:600;">User</span></div>
+                <div class="user-greeting">Welcome back, <span id="displayUserName" style="color:#fff; font-weight:700;">User</span></div>
             </div>
-            <div class="bal-box">
+            <div class="bal-box" onclick="openModal('walletModal')">
                 <div class="bal-label">Live Balance</div>
                 <div class="bal-amount">₹ <span id="userBalanceDisplay">0.00</span></div>
             </div>
@@ -208,7 +243,7 @@
                     <div class="mission-title"><i class="fa-solid fa-crown"></i> Prime Member</div>
                     <div class="mission-badge">Active</div>
                 </div>
-                <div class="mission-sub">Complete daily tasks & watch ads to boost your wallet automatically.</div>
+                <div class="mission-sub">Complete daily tasks, watch ads, and refer friends to boost your wallet automatically.</div>
                 <div class="mission-btn" onclick="openModal('apiModal')">
                     <i class="fa-solid fa-code"></i> Connect Telegram Bot
                 </div>
@@ -234,9 +269,9 @@
                     <div class="grid-icon bg-purple"><i class="fa-solid fa-terminal"></i></div>
                     <div class="grid-text">My API Key</div>
                 </div>
-                <div class="grid-item" onclick="loadHistory()">
-                    <div class="grid-icon bg-red"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                    <div class="grid-text">History</div>
+                <div class="grid-item" onclick="openSupportModal()">
+                    <div class="grid-icon bg-blue"><i class="fa-solid fa-headset"></i></div>
+                    <div class="grid-text">AI Support</div>
                 </div>
             </div>
         </div>
@@ -255,7 +290,7 @@
                     <label>Bot Token (From BotFather)</label>
                     <input type="text" id="adminBotToken" placeholder="12345:ABCDef...">
                 </div>
-                <button class="btn btn-green" onclick="saveAdminBot()">Save Bot Config</button>
+                <button class="btn btn-green" onclick="saveAdminData('bot')">Save Bot Config</button>
             </div>
 
             <div class="admin-box">
@@ -274,7 +309,7 @@
                         <input type="number" step="0.01" id="adminDailyReward" placeholder="0.50">
                     </div>
                 </div>
-                <button class="btn btn-purple" onclick="saveAdminAds()">Save Ad Settings</button>
+                <button class="btn btn-purple" onclick="saveAdminData('ads')">Save Ad Settings</button>
             </div>
             
             <div class="admin-box">
@@ -283,14 +318,24 @@
                     <label>Withdrawal Tax (%)</label>
                     <input type="number" id="adminTax" placeholder="e.g. 10">
                 </div>
-                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Tax deducted when bot calls User API for deduction.</p>
-                <button class="btn" onclick="saveApiTax()">Save Tax Config</button>
+                <button class="btn" onclick="saveAdminData('api')">Save Tax Config</button>
             </div>
+
+            <div class="admin-box" style="background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2);">
+                <h3 style="color: #60a5fa;"><i class="fa-solid fa-robot"></i> Gemini AI Support Config</h3>
+                <div class="input-group">
+                    <label>Gemini API Key</label>
+                    <input type="text" id="adminGeminiKey" placeholder="AIzaSy...">
+                </div>
+                <button class="btn" style="background: var(--primary-gradient);" onclick="saveAdminData('gemini')">Save AI Key</button>
+            </div>
+
+            <button class="btn btn-red" onclick="logoutSystem()" style="margin-top: 20px;"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="navTo('home')">
+            <div class="nav-item active" onclick="closeAllModals()">
                 <i class="fa-solid fa-house"></i> Home
             </div>
             <div class="nav-item" onclick="openModal('walletModal')">
@@ -321,7 +366,7 @@
                 <h3>🎁 Claim Promo Code</h3>
                 <button class="close-btn" onclick="closeModal('promoModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <input type="text" id="promoInput" style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#fff; outline:none; text-transform:uppercase;" placeholder="Enter Code">
+            <input type="text" id="promoInput" style="width:100%; padding:18px; margin-bottom:20px; border-radius:16px; background:rgba(0,0,0,0.4); border:2px solid var(--glass-border); color:#fff; outline:none; text-transform:uppercase; font-size: 16px; font-weight:700;" placeholder="Enter Code">
             <button class="btn btn-green" onclick="claimPromo()">Claim Now</button>
         </div>
     </div>
@@ -332,12 +377,11 @@
                 <h3><i class="fa-solid fa-terminal"></i> Merchant API</h3>
                 <button class="close-btn" onclick="closeModal('apiModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; line-height:1.6;">Link your account with the Telegram Bot using these credentials. Do not share these with anyone!</p>
-            <label style="font-size:12px; color:#fff;">User ID Token:</label>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.6; font-weight:500;">Link your account with the Telegram Bot using these credentials. Do not share these with anyone!</p>
+            <label style="font-size:13px; color:#fff; font-weight:700; text-transform:uppercase;">User ID Token:</label>
             <div class="api-box" id="pToken">Loading...</div>
-            <label style="font-size:12px; color:#fff;">Secret Key:</label>
+            <label style="font-size:13px; color:#fff; font-weight:700; text-transform:uppercase;">Secret Key:</label>
             <div class="api-box" id="pKey" style="color:var(--warning);">Loading...</div>
-            <button class="btn btn-green" style="margin-top:10px;" onclick="closeModal('apiModal')">Done</button>
         </div>
     </div>
 
@@ -348,7 +392,7 @@
                 <button class="close-btn" onclick="closeModal('historyModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="history-list" id="historyList">
-                <p style="text-align:center; color:var(--text-muted); font-size:13px;">Loading history...</p>
+                <p style="text-align:center; color:var(--text-muted); font-size:14px; font-weight:500;">Loading history...</p>
             </div>
         </div>
     </div>
@@ -359,8 +403,8 @@
                 <h3><i class="fa-solid fa-wallet"></i> My Wallet</h3>
                 <button class="close-btn" onclick="closeModal('walletModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <h1 style="color:var(--success); margin: 10px 0 20px; font-size:40px;">₹ <span id="wBalance">0.00</span></h1>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6; background:rgba(59,130,246,0.1); padding:15px; border-radius:12px; border:1px solid rgba(59,130,246,0.2);">For security, all withdrawals are processed automatically via Bot Request. Open the Telegram Bot to request a payout.</p>
+            <h1 style="color:var(--success); margin: 10px 0 25px; font-size:48px; font-weight:900; text-align:center;">₹ <span id="wBalance">0.00</span></h1>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:25px; line-height:1.6; background:rgba(59,130,246,0.1); padding:20px; border-radius:16px; border:1px solid rgba(59,130,246,0.2); font-weight:500;">For security, all withdrawals are processed automatically via Bot Request. Open the Telegram Bot to request a payout.</p>
             <button class="btn" onclick="window.open('https://t.me/'+botUsername, '_blank')">Open Telegram Bot</button>
         </div>
     </div>
@@ -371,10 +415,10 @@
                 <h3><i class="fa-solid fa-users"></i> Refer & Earn</h3>
                 <button class="close-btn" onclick="closeModal('referModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Share your code with friends. When they join, you earn rewards automatically!</p>
-            <label style="font-size:12px; color:#fff;">Your Invite Code:</label>
-            <div class="api-box" id="referCodeTxt" style="font-size:22px; font-weight:800; color:var(--success);">---</div>
-            <button class="btn btn-purple" style="margin-top:10px;" onclick="copyRefer()">Copy Link</button>
+            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; font-weight:500; line-height:1.6;">Share your link with friends. When they click and join, you earn rewards automatically!</p>
+            <label style="font-size:13px; color:#fff; font-weight:700; text-transform:uppercase;">Your Invite Code:</label>
+            <div class="api-box" id="referCodeTxt" style="font-size:26px; font-weight:900; color:var(--success); padding:25px;">---</div>
+            <button class="btn btn-purple" onclick="copyRefer()"><i class="fa-solid fa-copy"></i> Copy Refer Link</button>
         </div>
     </div>
 
@@ -384,14 +428,34 @@
                 <h3><i class="fa-solid fa-user-ninja"></i> My Profile</h3>
                 <button class="close-btn" onclick="closeModal('profileModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div style="text-align:center; margin-bottom:25px;">
-                <div style="width:80px; height:80px; background:var(--primary-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:35px; color:#fff; margin:0 auto 15px; box-shadow:0 10px 20px rgba(59,130,246,0.4);">
+            <div style="text-align:center; margin-bottom:30px;">
+                <div style="width:100px; height:100px; background:var(--primary-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:45px; color:#fff; margin:0 auto 20px; box-shadow:0 15px 30px rgba(59,130,246,0.4); border: 4px solid var(--glass-border);">
                     <i class="fa-solid fa-user"></i>
                 </div>
-                <h2 id="proName" style="color:#fff;">Loading...</h2>
-                <p id="proId" style="color:var(--text-muted); font-size:14px; margin-top:5px;">ID: ---</p>
+                <h2 id="proName" style="color:#fff; font-size:26px; font-weight:800;">Loading...</h2>
+                <p id="proId" style="color:var(--text-muted); font-size:15px; margin-top:5px; font-weight:600;">ID: ---</p>
             </div>
-            <button class="btn btn-red" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout Safely</button>
+            <button class="btn btn-red" onclick="logoutSystem()"><i class="fa-solid fa-right-from-bracket"></i> Logout Safely</button>
+        </div>
+    </div>
+
+    <!-- SUPPORT AI MODAL -->
+    <div id="supportModal" class="modal">
+        <div class="modal-content" style="padding: 25px 20px; height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="margin-bottom: 15px;">
+                <h3><i class="fa-solid fa-robot"></i> AI Support</h3>
+                <button class="close-btn" onclick="closeModal('supportModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="chat-container">
+                <div class="chat-box" id="chatBox">
+                    <div class="msg ai">Hello! I am NovaPay AI Support. How can I help you today?</div>
+                </div>
+                <div class="typing-indicator" id="aiTyping">AI is typing...</div>
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="Type your message here..." onkeypress="if(event.key==='Enter') sendChat()">
+                    <button onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -400,7 +464,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Tuzi New Config
+        // Tuzi Config
         const firebaseConfig = {
           apiKey: "AIzaSyDkmoIzcYsYTBYwIk2A_8hUXWW5znyeTaY",
           authDomain: "newkumarbot.firebaseapp.com",
@@ -418,10 +482,13 @@
         let isLogin = true;
         let cAns = 0;
         let currUser = "";
+        let userName = "";
         let botUsername = "";
         let sysAds = { link: "", reward: 0.00, daily: 0.50 };
+        let geminiApiKey = "";
+        let aiMemory = [];
 
-        // Toast Function
+        // Toast
         window.showToast = (msg, type='success') => {
             const box = document.getElementById('toastBox');
             const toast = document.createElement('div');
@@ -431,15 +498,39 @@
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(),300); }, 3000);
         };
 
-        // Auto-fill Refer Code from URL (?ref=CODE)
+        // Device Fingerprinting logic (1 Device 1 User)
+        function getDeviceId() {
+            let id = localStorage.getItem('nova_device_id');
+            if(!id) {
+                id = "DEV-" + Math.random().toString(36).substr(2, 12).toUpperCase();
+                localStorage.setItem('nova_device_id', id);
+            }
+            return id;
+        }
+        const deviceId = getDeviceId();
+
+        // Check Referral Code & Session on Load
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
+            
+            // Check Auto-login session
+            const session = localStorage.getItem('nova_session');
+
             if(refCode) {
+                // Force switch to Sign Up
                 isLogin = false;
-                toggleAuth(); // Force to signup page
+                switchToSignupUI();
                 document.getElementById('regRefer').value = refCode.toUpperCase();
                 showToast("Referral Code Applied!", "success");
+            } else if (session) {
+                // Auto Login
+                try {
+                    let sData = JSON.parse(session);
+                    document.getElementById('tgId').value = sData.id;
+                    document.getElementById('tgPass').value = sData.pass;
+                    handleAuth(); // Trigger login logic
+                } catch(e) { localStorage.removeItem('nova_session'); }
             }
         };
 
@@ -449,18 +540,29 @@
             return r;
         }
 
-        window.toggleAuth = () => {
+        window.toggleAuthBtn = () => {
             isLogin = !isLogin;
-            document.getElementById('signupFields').classList.toggle('hidden-view');
-            document.getElementById('captchaBox').classList.toggle('hidden-view');
-            document.getElementById('authBtn').innerText = isLogin ? "Login Securely" : "Create Account";
-            document.getElementById('toggleText').innerText = isLogin ? "Create New Account" : "Back to Login";
-            
             if(!isLogin) {
-                let n1 = Math.floor(Math.random() * 10) + 1; let n2 = Math.floor(Math.random() * 10) + 1;
-                cAns = n1 + n2; document.getElementById('mathQ').innerText = `${n1} + ${n2} =`;
+                switchToSignupUI();
+            } else {
+                document.getElementById('signupFields').classList.add('hidden-view');
+                document.getElementById('captchaBox').classList.add('hidden-view');
+                document.getElementById('authBtn').innerText = "Login Securely";
+                document.getElementById('toggleText').innerText = "Create New Account";
+                document.getElementById('authMainTitle').innerText = "NovaPay";
             }
         };
+
+        function switchToSignupUI() {
+            document.getElementById('signupFields').classList.remove('hidden-view');
+            document.getElementById('captchaBox').classList.remove('hidden-view');
+            document.getElementById('authBtn').innerText = "Create Account";
+            document.getElementById('toggleText').innerText = "Back to Login";
+            document.getElementById('authMainTitle').innerText = "Join Nova";
+            
+            let n1 = Math.floor(Math.random() * 10) + 1; let n2 = Math.floor(Math.random() * 10) + 1;
+            cAns = n1 + n2; document.getElementById('mathQ').innerText = `${n1} + ${n2} =`;
+        }
 
         async function logHistory(id, title, amt, type) {
             if(id === "101") return;
@@ -468,7 +570,7 @@
             await push(hRef, {
                 title: title,
                 amount: parseFloat(amt).toFixed(2),
-                type: type, // 'plus' or 'minus'
+                type: type,
                 date: new Date().toLocaleString()
             });
         }
@@ -481,13 +583,30 @@
             if(!id || !pass) return showToast("Enter ID and Password!", "error");
 
             if(id === "101" && pass === "90901") {
-                currUser = "101"; return openDash("101", { name: "Master Admin" });
+                currUser = "101"; 
+                userName = "Master Admin";
+                localStorage.setItem('nova_session', JSON.stringify({id: id, pass: pass}));
+                return openDash("101", { name: "Master Admin" });
             }
 
             btn.innerText = "Processing...";
 
             try {
+                // 1. Device Check Logic (Strict 1 Device = 1 User)
+                let lockRef = ref(db, 'device_locks/' + deviceId);
+                let lockSnap = await get(lockRef);
+                
+                if(lockSnap.exists() && lockSnap.val() !== id) {
+                    // This device belongs to someone else. Ban the NEW attempted ID.
+                    await update(ref(db, 'nova_users/' + id), { isBanned: true });
+                    document.getElementById('authView').classList.add('hidden-view');
+                    document.getElementById('bannedView').classList.remove('hidden-view');
+                    return;
+                }
+
                 let uRef = ref(db, 'nova_users/' + id);
+                
+                // SIGN UP LOGIC
                 if(!isLogin) {
                     let name = document.getElementById('regName').value.trim();
                     let refInput = document.getElementById('regRefer').value.trim().toUpperCase();
@@ -504,38 +623,48 @@
                         name: name, pass: pass, bal: 0.00, 
                         tok: uniqueToken, 
                         key: "KEY-" + genStr(12),
-                        referredBy: refInput || "NONE"
+                        referredBy: refInput || "NONE",
+                        isBanned: false
                     };
                     
                     await set(uRef, nUser); 
+                    await set(lockRef, id); // Lock device to this new user
                     await logHistory(id, "Account Created", 0, "plus");
 
-                    // Add refer bonus to referrer if exists
-                    if(refInput) {
-                        // In a real app, you'd search for the user with this token and add balance.
-                        // Kept simple for now.
-                    }
-
+                    localStorage.setItem('nova_session', JSON.stringify({id: id, pass: pass}));
                     openDash(id, nUser);
-                } else {
+                } 
+                // LOGIN LOGIC
+                else {
                     let s = await get(uRef); 
                     if(!s.exists()) { btn.innerText="Login Securely"; return showToast("User not found!", "error"); }
+                    
                     let d = s.val(); 
+                    if(d.isBanned) {
+                        document.getElementById('authView').classList.add('hidden-view');
+                        document.getElementById('bannedView').classList.remove('hidden-view');
+                        return;
+                    }
+
                     if(d.pass !== pass) { btn.innerText="Login Securely"; return showToast("Wrong Password!", "error"); }
                     
+                    await set(lockRef, id); // Ensure lock is refreshed
+                    localStorage.setItem('nova_session', JSON.stringify({id: id, pass: pass}));
                     openDash(id, d);
                 }
             } catch(e) { 
-                showToast("Database Error! Check Rules.", "error"); 
+                showToast("Network Error!", "error"); 
                 btn.innerText = isLogin ? "Login Securely" : "Create Account";
             }
         };
 
         function openDash(id, data) {
             currUser = id;
+            userName = data.name || id;
+            
             document.getElementById('authView').classList.add('hidden-view');
             document.getElementById('mainView').classList.remove('hidden-view');
-            document.getElementById('displayUserName').innerText = data.name || id;
+            document.getElementById('displayUserName').innerText = userName;
 
             if(id === "101") {
                 document.getElementById('adminPanel').classList.remove('hidden-view');
@@ -555,16 +684,17 @@
                             document.getElementById('adminDailyReward').value = parseFloat(ad.ads.daily||0.5).toFixed(2);
                         }
                         if(ad.api) document.getElementById('adminTax').value = ad.api.tax || "";
+                        if(ad.gemini) document.getElementById('adminGeminiKey').value = ad.gemini.key || "";
                     }
                 });
             } else {
                 document.getElementById('pToken').innerText = data.tok;
                 document.getElementById('pKey').innerText = data.key;
                 document.getElementById('referCodeTxt').innerText = data.tok;
-                document.getElementById('proName').innerText = data.name;
+                document.getElementById('proName').innerText = userName;
                 document.getElementById('proId').innerText = "ID: " + id;
                 
-                // Live Balance Listener
+                // Live Balance
                 onValue(ref(db, 'nova_users/' + id + '/bal'), (snap) => {
                     let b = parseFloat(snap.val() || 0).toFixed(2);
                     document.getElementById('userBalanceDisplay').innerText = b;
@@ -577,6 +707,7 @@
                 if(snap.exists()) {
                     let adminData = snap.val();
                     if(adminData.bot) botUsername = (adminData.bot.username || "").replace("@", "");
+                    if(adminData.gemini) geminiApiKey = adminData.gemini.key || "";
                     
                     if(adminData.ads) {
                         sysAds = adminData.ads;
@@ -590,17 +721,25 @@
                     }
                 }
             });
+
+            // Initialize AI Context
+            aiMemory = [
+                {
+                    "role": "user",
+                    "parts": [{"text": `System Instruction: You are NovaPay AI Support. The user's name is ${userName}. Keep answers helpful, short, and friendly.`}]
+                },
+                {
+                    "role": "model",
+                    "parts": [{"text": "Understood. I am ready to help."}]
+                }
+            ];
         }
 
         window.watchAd = () => {
-            if(!sysAds.link || sysAds.link.trim() === "") return showToast("Ads currently disabled by Admin.", "error");
-            
-            // Open Ad Link
+            if(!sysAds.link || sysAds.link.trim() === "") return showToast("Ads currently disabled.", "error");
             window.open(sysAds.link, '_blank');
             
             if(currUser === "101") return;
-            
-            // Wait 3s then reward
             setTimeout(async () => {
                 let s = await get(ref(db, 'nova_users/' + currUser + '/bal'));
                 let cb = parseFloat(s.val() || 0);
@@ -609,26 +748,20 @@
                 
                 await update(ref(db, 'nova_users/' + currUser), { bal: parseFloat(newBal) });
                 await logHistory(currUser, "Ad Watched", reward, "plus");
-                showToast(`🎉 You earned ₹${reward.toFixed(2)} from Ad!`);
+                showToast(`🎉 You earned ₹${reward.toFixed(2)}!`);
             }, 3000);
         };
 
         window.claimDailyBonus = async () => {
             if(currUser === "101") return;
-            
-            // Daily bonus REQUIRES ad link
-            if(!sysAds.link || sysAds.link.trim() === "") {
-                return showToast("⚠️ Ads are disabled. Daily Bonus requires Ads to be active.", "error");
-            }
+            if(!sysAds.link || sysAds.link.trim() === "") return showToast("⚠️ Ads disabled. Daily Bonus needs Ads.", "error");
 
             let last = await get(ref(db, 'nova_users/' + currUser + '/lastDaily'));
             let now = new Date().toDateString();
-            if(last.exists() && last.val() === now) return showToast("❌ Already claimed today. Come back tomorrow!", "error");
+            if(last.exists() && last.val() === now) return showToast("❌ Already claimed today!", "error");
             
-            // Open Ad
             window.open(sysAds.link, '_blank');
 
-            // Process Reward
             setTimeout(async () => {
                 let b = await get(ref(db, 'nova_users/' + currUser + '/bal'));
                 let reward = parseFloat(sysAds.daily || 0.50);
@@ -667,31 +800,30 @@
             
             await logHistory(currUser, `Promo: ${code}`, reward, "plus");
             closeModal('promoModal');
+            document.getElementById('promoInput').value = "";
             showToast(`🎁 Success! ₹${reward.toFixed(2)} added!`);
         };
 
-        // --- HISTORY LOAD ---
         window.loadHistory = async () => {
             if(currUser === "101") return showToast("Admin has no history", "error");
             openModal('historyModal');
             const hList = document.getElementById('historyList');
-            hList.innerHTML = "<p style='text-align:center; color:#94a3b8; font-size:13px;'>Loading...</p>";
+            hList.innerHTML = "<p style='text-align:center; color:#94a3b8;'>Loading...</p>";
             
             const snap = await get(ref(db, `nova_users/${currUser}/history`));
             if(!snap.exists()) {
-                hList.innerHTML = "<p style='text-align:center; color:#94a3b8; font-size:13px;'>No transactions yet.</p>";
+                hList.innerHTML = "<p style='text-align:center; color:#94a3b8;'>No transactions yet.</p>";
                 return;
             }
             
             let html = "";
             let data = snap.val();
-            // Reverse to show latest first
             let keys = Object.keys(data).reverse(); 
             
             keys.forEach(k => {
                 let tx = data[k];
                 let sign = tx.type === 'plus' ? '+' : '-';
-                let colorClass = tx.type === 'plus' ? 'hi-plus' : 'hi-minus';
+                let cClass = tx.type === 'plus' ? 'hi-plus' : 'hi-minus';
                 
                 html += `
                 <div class="history-item">
@@ -699,33 +831,79 @@
                         <div class="hi-title">${tx.title}</div>
                         <div class="hi-date">${tx.date}</div>
                     </div>
-                    <div class="hi-amt ${colorClass}">${sign}₹${tx.amount}</div>
+                    <div class="hi-amt ${cClass}">${sign}₹${tx.amount}</div>
                 </div>`;
             });
             hList.innerHTML = html;
         };
 
+        // --- GEMINI AI SUPPORT ---
+        window.openSupportModal = () => {
+            if(!geminiApiKey) return showToast("AI Support is currently offline.", "error");
+            openModal('supportModal');
+        };
+
+        window.sendChat = async () => {
+            const inputEl = document.getElementById('chatInput');
+            const msg = inputEl.value.trim();
+            if(!msg) return;
+            
+            const chatBox = document.getElementById('chatBox');
+            const typing = document.getElementById('aiTyping');
+            
+            // Append User Msg
+            chatBox.innerHTML += `<div class="msg user">${msg}</div>`;
+            inputEl.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+            typing.style.display = "block";
+
+            aiMemory.push({"role": "user", "parts": [{"text": msg}]});
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ contents: aiMemory })
+                });
+                const data = await response.json();
+                
+                if(data.candidates && data.candidates.length > 0) {
+                    const reply = data.candidates[0].content.parts[0].text;
+                    aiMemory.push({"role": "model", "parts": [{"text": reply}]});
+                    chatBox.innerHTML += `<div class="msg ai">${reply.replace(/\n/g, '<br>')}</div>`;
+                } else {
+                    chatBox.innerHTML += `<div class="msg ai" style="color:var(--danger);">Error connecting to AI.</div>`;
+                }
+            } catch(e) {
+                chatBox.innerHTML += `<div class="msg ai" style="color:var(--danger);">Network Error.</div>`;
+            }
+            typing.style.display = "none";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
         // --- ADMIN SAVES ---
-        window.saveAdminBot = () => {
-            let u = document.getElementById('adminBotUser').value.trim();
-            let t = document.getElementById('adminBotToken').value.trim();
-            update(ref(db, 'nova_admin/bot'), { username: u, token: t }).then(()=>showToast("✅ Bot Config Saved!"));
+        window.saveAdminData = (type) => {
+            if(type === 'bot') {
+                let u = document.getElementById('adminBotUser').value.trim();
+                let t = document.getElementById('adminBotToken').value.trim();
+                update(ref(db, 'nova_admin/bot'), { username: u, token: t }).then(()=>showToast("✅ Bot Config Saved!"));
+            } else if (type === 'ads') {
+                let l = document.getElementById('adminAdLink').value.trim();
+                let r = parseFloat(document.getElementById('adminAdReward').value || 0).toFixed(2);
+                let d = parseFloat(document.getElementById('adminDailyReward').value || 0).toFixed(2);
+                update(ref(db, 'nova_admin/ads'), { link: l, reward: parseFloat(r), daily: parseFloat(d) }).then(()=>showToast("✅ Ads Saved!"));
+            } else if (type === 'api') {
+                let tax = parseFloat(document.getElementById('adminTax').value || 0);
+                update(ref(db, 'nova_admin/api'), { tax: tax }).then(()=>showToast("✅ API Tax Config Saved!"));
+            } else if (type === 'gemini') {
+                let key = document.getElementById('adminGeminiKey').value.trim();
+                update(ref(db, 'nova_admin/gemini'), { key: key }).then(()=>showToast("✅ Gemini API Key Saved!"));
+            }
         };
 
-        window.saveAdminAds = () => {
-            let l = document.getElementById('adminAdLink').value.trim();
-            let r = parseFloat(document.getElementById('adminAdReward').value || 0).toFixed(2);
-            let d = parseFloat(document.getElementById('adminDailyReward').value || 0).toFixed(2);
-            update(ref(db, 'nova_admin/ads'), { link: l, reward: parseFloat(r), daily: parseFloat(d) }).then(()=>showToast("✅ Ads Saved!"));
-        };
-        
-        window.saveApiTax = () => {
-            let tax = parseFloat(document.getElementById('adminTax').value || 0);
-            update(ref(db, 'nova_admin/api'), { tax: tax }).then(()=>showToast("✅ API Tax Config Saved!"));
-        };
-
-        // --- MODAL & UTILS ---
+        // --- MODAL UTILS ---
         window.openModal = (id) => {
+            closeAllModals(); // close others first
             const m = document.getElementById(id);
             m.classList.remove('hidden-view');
             setTimeout(() => m.classList.add('show'), 10);
@@ -733,10 +911,16 @@
         window.closeModal = (id) => {
             const m = document.getElementById(id);
             m.classList.remove('show');
-            setTimeout(() => m.classList.add('hidden-view'), 300);
+            setTimeout(() => m.classList.add('hidden-view'), 400);
+        };
+        window.closeAllModals = () => {
+            document.querySelectorAll('.modal').forEach(m => {
+                m.classList.remove('show');
+                setTimeout(() => m.classList.add('hidden-view'), 400);
+            });
         };
         window.navTo = (page) => {
-            showToast("You are on " + page);
+            closeAllModals();
         };
         window.copyRefer = () => {
             let code = document.getElementById('referCodeTxt').innerText;
@@ -744,8 +928,11 @@
             navigator.clipboard.writeText(link);
             showToast("Refer Link Copied!");
         };
-        window.logout = () => location.reload();
-
+        
+        window.logoutSystem = () => {
+            localStorage.removeItem('nova_session');
+            location.reload();
+        };
     </script>
 </body>
 </html>
