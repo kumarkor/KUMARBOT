@@ -3,145 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pop Ninja Pro - Dashboard</title>
+    <title>NovaPay - Premium Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
         :root {
-            --bg-dark: #1e2445;
-            --bg-card: #27315c;
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --accent: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #3b82f6;
+            --primary-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             overflow-x: hidden;
-            padding-bottom: 80px; /* For bottom nav */
+            padding-bottom: 90px;
         }
+
+        /* custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toastBox { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--bg-card); border-left: 4px solid var(--primary); padding: 15px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 500; animation: slideIn 0.3s ease forwards; display: flex; align-items: center; gap: 10px; }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--success); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* --- AUTH SCREEN --- */
-        .auth-container {
-            width: 100%; max-width: 400px; margin: 40px auto; padding: 30px;
-            background: rgba(39, 49, 92, 0.5); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px; backdrop-filter: blur(10px);
-        }
-        .auth-header { text-align: center; margin-bottom: 25px; }
-        .auth-header h1 { font-size: 28px; font-weight: 800; background: linear-gradient(90deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .input-group { margin-bottom: 18px; }
-        .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-        .input-group input { width: 100%; padding: 14px 15px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
-        .input-group input:focus { border-color: var(--primary); background: rgba(0,0,0,0.4); }
-        .btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #6366f1, #4f46e5); border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
+        .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
+        .auth-container { width: 100%; max-width: 420px; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 35px 25px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header h1 { font-size: 32px; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+        .input-group input { width: 100%; padding: 15px 18px; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        .btn { width: 100%; padding: 16px; background: var(--primary-gradient); border: none; border-radius: 14px; color: white; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s; box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); text-transform: uppercase; letter-spacing: 1px; }
         .btn:active { transform: scale(0.97); }
-        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
-        .switch-text { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 20px; cursor: pointer; }
-        .switch-text span { color: var(--primary-light); font-weight: 600; }
+        .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
+        .switch-text { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 25px; cursor: pointer; }
+        .switch-text span { color: var(--primary); font-weight: 700; }
 
         /* --- DASHBOARD HEADER --- */
-        .dash-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .dash-title { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .user-greeting { font-size: 14px; color: var(--text-muted); margin-top: -5px; }
+        .dash-header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(30,41,59,0.8), transparent); }
+        .dash-title { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .user-greeting { font-size: 14px; color: var(--text-muted); }
+        .bal-box { text-align: right; background: rgba(16, 185, 129, 0.1); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .bal-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .bal-amount { font-size: 20px; font-weight: 800; color: var(--success); }
 
         /* --- MISSION CARD --- */
-        .mission-card {
-            margin: 0 20px 25px; padding: 25px 20px; border-radius: 20px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); position: relative; overflow: hidden;
-        }
-        .mission-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none; }
-        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .mission-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .mission-badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; }
-        .mission-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 15px; }
-        .mission-btn { display: block; text-align: center; font-size: 14px; font-weight: 600; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
-        
-        /* --- MAIN GRID (POP NINJA STYLE) --- */
-        .section-title { font-size: 16px; font-weight: 600; color: #fff; margin: 0 20px 15px; display: flex; justify-content: space-between; }
+        .mission-card { margin: 0 20px 25px; padding: 25px; border-radius: 24px; background: var(--primary-gradient); box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3); position: relative; overflow: hidden; }
+        .mission-card::after { content: ''; position: absolute; top: 0; right: 0; width: 150px; height: 150px; background: rgba(255,255,255,0.1); border-radius: 50%; transform: translate(30%, -30%); }
+        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; position: relative; z-index: 2; }
+        .mission-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .mission-badge { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+        .mission-sub { font-size: 13px; color: rgba(255,255,255,0.9); margin-bottom: 20px; position: relative; z-index: 2; }
+        .mission-btn { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; backdrop-filter: blur(5px); }
+
+        /* --- MAIN GRID --- */
+        .section-title { font-size: 18px; font-weight: 700; color: #fff; margin: 0 20px 15px; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px 20px; }
-        
-        .grid-item {
-            background: var(--bg-card); border-radius: 20px; padding: 25px 15px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; cursor: pointer; transition: 0.3s;
-            border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
+        .grid-item { background: var(--bg-card); border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
         .grid-item:active { transform: scale(0.95); }
-        .grid-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #fff; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .grid-icon { width: 55px; height: 55px; border-radius: 18px; display: flex; justify-content: center; align-items: center; font-size: 26px; color: #fff; margin-bottom: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
         
-        .bg-teal { background: #14b8a6; } .bg-yellow { background: #f59e0b; }
-        .bg-purple { background: #8b5cf6; } .bg-red { background: #ef4444; }
-        .bg-orange { background: #f97316; } .bg-blue { background: #3b82f6; }
+        .bg-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+        .bg-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .bg-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .bg-red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .bg-orange { background: linear-gradient(135deg, #f97316, #c2410c); }
         
-        .grid-text { font-size: 14px; font-weight: 600; color: #e2e8f0; }
+        .grid-text { font-size: 15px; font-weight: 600; color: #e2e8f0; }
+        .ad-amt { font-size: 12px; color: var(--success); font-weight: 800; background: rgba(16,185,129,0.1); padding: 2px 8px; border-radius: 10px; margin-top: 5px; display: inline-block; }
 
-        /* --- ADMIN PANEL (Hidden by default) --- */
-        .admin-box { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px; padding: 20px; margin: 0 20px 20px; }
-        .admin-box h3 { color: #fca5a5; margin-bottom: 15px; font-size: 16px; }
+        /* --- ADMIN PANEL --- */
+        .admin-section { padding: 0 20px 20px; }
+        .admin-box { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 20px; padding: 25px; margin-bottom: 20px; }
+        .admin-box h3 { color: #fca5a5; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid rgba(239,68,68,0.2); padding-bottom: 10px; }
+        .admin-row { display: flex; gap: 15px; margin-bottom: 15px;}
+        .admin-row .input-group { flex: 1; margin-bottom: 0; }
 
-        /* --- BOTTOM NAVIGATION --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
-            background: var(--bg-card); display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.05); border-radius: 20px 20px 0 0; z-index: 100;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 500; cursor: pointer; transition: 0.3s; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; }
-        .nav-item.active { color: var(--primary-light); }
-        .nav-home-btn { 
-            width: 56px; height: 56px; background: var(--primary); border-radius: 50%; 
+        /* --- BOTTOM NAVIGATION (PROFILE IN CENTER) --- */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); z-index: 100; border-radius: 30px 30px 0 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; transition: 0.3s; flex: 1; }
+        .nav-item i { font-size: 22px; margin-bottom: 6px; transition: 0.3s; }
+        .nav-item:hover i { color: #fff; transform: translateY(-3px); }
+        .nav-item.active { color: var(--primary); }
+        
+        /* THE CENTER PROFILE BUTTON */
+        .nav-center-wrapper { position: relative; flex: 1; display: flex; justify-content: center; }
+        .nav-center-btn { 
+            position: absolute; top: -35px; width: 70px; height: 70px;
+            background: var(--primary-gradient); border-radius: 50%;
             display: flex; justify-content: center; align-items: center; color: #fff;
-            transform: translateY(-20px); box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5); border: 5px solid var(--bg-dark);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5);
+            border: 6px solid var(--bg-dark); cursor: pointer; transition: 0.3s;
         }
+        .nav-center-btn i { font-size: 26px; }
+        .nav-center-btn:active { transform: scale(0.9); }
+        .nav-center-text { position: absolute; bottom: -20px; font-size: 11px; font-weight: 600; color: var(--text-muted); }
 
-        .hidden { display: none !important; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; display: flex; justify-content: center; align-items: center; }
-        .modal-content { background: var(--bg-card); padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        /* --- MODALS (SPA) --- */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); z-index: 999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 0; pointer-events: none; transition: 0.3s; }
+        .modal.show { opacity: 1; pointer-events: all; }
+        .modal-content { background: var(--bg-card); padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); transform: translateY(20px); transition: 0.3s; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+        .modal.show .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .modal-header h3 { font-size: 20px; color: #fff; }
+        .close-btn { background: rgba(255,255,255,0.1); border: none; width: 35px; height: 35px; border-radius: 50%; color: #fff; cursor: pointer; }
+        
+        .history-list { max-height: 300px; overflow-y: auto; }
+        .history-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
+        .hi-title { font-size: 14px; font-weight: 600; color: #fff; }
+        .hi-date { font-size: 11px; color: var(--text-muted); }
+        .hi-amt { font-size: 16px; font-weight: 700; }
+        .hi-plus { color: var(--success); }
+        .hi-minus { color: var(--danger); }
+
+        .api-box { background: #020617; padding: 15px; border-radius: 12px; border: 1px dashed #334155; font-family: monospace; color: #38bdf8; font-size: 14px; margin-bottom: 15px; word-break: break-all; user-select: all; text-align: center; letter-spacing: 1px; }
+
+        .hidden-view { display: none !important; }
     </style>
 </head>
 <body>
 
+    <!-- TOAST ALERTS -->
+    <div id="toastBox"></div>
+
     <!-- 1. AUTH SCREEN -->
-    <div id="authView">
+    <div id="authView" class="auth-wrapper">
         <div class="auth-container">
             <div class="auth-header">
-                <h1>Pop Ninja</h1>
-                <p style="font-size:13px; color:var(--text-muted);">Welcome back! Please login.</p>
+                <h1>NovaPay Pro</h1>
+                <p style="font-size:14px; color:var(--text-muted); margin-top:5px;">Secure Bot Payment Gateway</p>
             </div>
             
-            <div id="signupFields" class="hidden">
+            <div id="signupFields" class="hidden-view">
                 <div class="input-group">
                     <label>Full Name</label>
                     <input type="text" id="regName" placeholder="Enter your name">
+                </div>
+                <div class="input-group">
+                    <label>Referral Code (Optional)</label>
+                    <input type="text" id="regRefer" placeholder="Enter Code (if any)" style="text-transform: uppercase;">
                 </div>
             </div>
 
             <div class="input-group">
                 <label>Telegram User ID</label>
-                <input type="text" id="tgId" placeholder="e.g. 7335163273">
+                <input type="number" id="tgId" placeholder="e.g. 7335163273">
             </div>
             <div class="input-group">
                 <label>Password</label>
                 <input type="password" id="tgPass" placeholder="••••••••">
             </div>
 
-            <div id="captchaBox" class="hidden">
-                <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 5px;">Solve Math: <span id="mathQ" style="color:#818cf8; font-weight:bold; font-size:16px;"></span></label>
+            <div id="captchaBox" class="hidden-view">
+                <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 8px;">Human Verification: <span id="mathQ" style="color:var(--primary); font-weight:800; font-size:18px;"></span></label>
                 <input type="number" id="mathAns" class="input-group" placeholder="Answer?">
             </div>
 
-            <p id="authError" style="color:#ef4444; font-size:13px; text-align:center; margin-bottom:10px; display:none;"></p>
-            <button class="btn" id="authBtn" onclick="handleAuth()">Login</button>
+            <button class="btn" id="authBtn" onclick="handleAuth()">Login Securely</button>
             
             <div class="switch-text" onclick="toggleAuth()">
                 <span id="toggleText">Create New Account</span>
@@ -150,150 +188,219 @@
     </div>
 
     <!-- 2. MAIN DASHBOARD VIEW -->
-    <div id="mainView" class="hidden">
+    <div id="mainView" class="hidden-view">
         
         <div class="dash-header">
             <div>
-                <div class="dash-title">Pop Ninja <i class="fa-solid fa-user-ninja" style="color:#fbbf24;"></i></div>
-                <div class="user-greeting">Hi <span id="displayUserName">User</span> 👋</div>
+                <div class="dash-title">NovaPay <i class="fa-solid fa-bolt" style="color:var(--warning);"></i></div>
+                <div class="user-greeting">Welcome back, <span id="displayUserName" style="color:#fff; font-weight:600;">User</span></div>
             </div>
-            <div style="text-align: right;">
-                <div style="font-size: 12px; color: var(--text-muted);">Balance</div>
-                <div style="font-size: 18px; font-weight: 700; color: #10b981;">₹ <span id="userBalanceDisplay">0.00</span></div>
-            </div>
-        </div>
-
-        <!-- Mission Card -->
-        <div class="mission-card">
-            <div class="mission-top">
-                <div class="mission-title"><i class="fa-solid fa-trophy"></i> Daily Mission</div>
-                <div class="mission-badge">0/4</div>
-            </div>
-            <div class="mission-sub">Complete mission & earn 501 extra coins</div>
-            <div class="mission-btn" onclick="alert('Missions locked. Complete previous tasks first!')">
-                <i class="fa-solid fa-circle-check"></i> View Daily Mission <i class="fa-solid fa-chevron-right" style="font-size:12px; margin-left:5px;"></i>
+            <div class="bal-box">
+                <div class="bal-label">Live Balance</div>
+                <div class="bal-amount">₹ <span id="userBalanceDisplay">0.00</span></div>
             </div>
         </div>
 
-        <div class="section-title">
-            <span>Earn</span>
-            <span style="font-size: 12px; color: var(--text-muted); font-weight: 400;">Keep grinding</span>
-        </div>
+        <div id="userContent">
+            <!-- Mission Card -->
+            <div class="mission-card">
+                <div class="mission-top">
+                    <div class="mission-title"><i class="fa-solid fa-crown"></i> Prime Member</div>
+                    <div class="mission-badge">Active</div>
+                </div>
+                <div class="mission-sub">Complete daily tasks & watch ads to boost your wallet automatically.</div>
+                <div class="mission-btn" onclick="openModal('apiModal')">
+                    <i class="fa-solid fa-code"></i> Connect Telegram Bot
+                </div>
+            </div>
 
-        <!-- Grid Menu -->
-        <div class="grid-container">
-            <div class="grid-item" onclick="openModal('promoModal')">
-                <div class="grid-icon bg-teal"><i class="fa-solid fa-ticket-simple"></i></div>
-                <div class="grid-text">Promo Code</div>
-            </div>
-            <div class="grid-item" onclick="claimDaily()">
-                <div class="grid-icon bg-yellow"><i class="fa-solid fa-gift"></i></div>
-                <div class="grid-text">Daily Bonus</div>
-            </div>
-            <div class="grid-item" onclick="alert('Bubble Pop Game Coming Soon!')">
-                <div class="grid-icon bg-purple"><i class="fa-solid fa-circle-nodes"></i></div>
-                <div class="grid-text">Bubble Pop</div>
-            </div>
-            <div class="grid-item" onclick="alert('Fruit Ninja Game Coming Soon!')">
-                <div class="grid-icon bg-red"><i class="fa-brands fa-apple"></i></div>
-                <div class="grid-text">Fruit Ninja</div>
-            </div>
-            <div class="grid-item" id="watchAdBox" style="grid-column: span 2;" onclick="watchAd()">
-                <div class="grid-icon bg-orange"><i class="fa-solid fa-play"></i></div>
-                <div class="grid-text">Watch & Earn <br><span style="font-size:11px; color:#10b981;" id="adRewardText">₹0.00</span></div>
+            <div class="section-title">Earn & Explore</div>
+
+            <!-- Grid Menu -->
+            <div class="grid-container">
+                <div class="grid-item" onclick="openModal('promoModal')">
+                    <div class="grid-icon bg-teal"><i class="fa-solid fa-ticket-simple"></i></div>
+                    <div class="grid-text">Promo Code</div>
+                </div>
+                <div class="grid-item" onclick="claimDailyBonus()">
+                    <div class="grid-icon bg-yellow"><i class="fa-solid fa-gift"></i></div>
+                    <div class="grid-text">Daily Bonus</div>
+                </div>
+                <div class="grid-item" id="watchAdBox" style="grid-column: span 2;" onclick="watchAd()">
+                    <div class="grid-icon bg-orange"><i class="fa-solid fa-play"></i></div>
+                    <div class="grid-text">Watch Ads & Earn <br><span class="ad-amt" id="adRewardText">₹0.00</span></div>
+                </div>
+                <div class="grid-item" onclick="openModal('apiModal')">
+                    <div class="grid-icon bg-purple"><i class="fa-solid fa-terminal"></i></div>
+                    <div class="grid-text">My API Key</div>
+                </div>
+                <div class="grid-item" onclick="loadHistory()">
+                    <div class="grid-icon bg-red"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <div class="grid-text">History</div>
+                </div>
             </div>
         </div>
 
         <!-- ADMIN PANEL (Only visible to 101) -->
-        <div id="adminPanel" class="hidden">
-            <div class="section-title"><span>Admin Controls</span></div>
+        <div id="adminPanel" class="admin-section hidden-view">
+            <div class="section-title">Master Admin Panel</div>
+            
             <div class="admin-box">
-                <h3>📺 Ads Configuration</h3>
+                <h3><i class="fa-brands fa-telegram"></i> Bot Configuration</h3>
                 <div class="input-group">
-                    <label>Ad URL Link</label>
-                    <input type="text" id="adminAdLink" placeholder="https://...">
+                    <label>Telegram Bot Username</label>
+                    <input type="text" id="adminBotUser" placeholder="@YourBot">
                 </div>
                 <div class="input-group">
-                    <label>Reward per view (e.g. 0.10)</label>
-                    <input type="number" step="0.01" id="adminAdReward" placeholder="0.10">
+                    <label>Bot Token (From BotFather)</label>
+                    <input type="text" id="adminBotToken" placeholder="12345:ABCDef...">
                 </div>
-                <button class="btn btn-green" onclick="saveAdminSettings()">Save Settings</button>
+                <button class="btn btn-green" onclick="saveAdminBot()">Save Bot Config</button>
+            </div>
+
+            <div class="admin-box">
+                <h3><i class="fa-solid fa-tv"></i> Ads & Earn System</h3>
+                <div class="input-group">
+                    <label>Ad URL Link (Leave blank to disable Ads)</label>
+                    <input type="url" id="adminAdLink" placeholder="https://your-ad-link.com">
+                </div>
+                <div class="admin-row">
+                    <div class="input-group">
+                        <label>Ad Reward (₹)</label>
+                        <input type="number" step="0.01" id="adminAdReward" placeholder="0.10">
+                    </div>
+                    <div class="input-group">
+                        <label>Daily Bonus (₹)</label>
+                        <input type="number" step="0.01" id="adminDailyReward" placeholder="0.50">
+                    </div>
+                </div>
+                <button class="btn btn-purple" onclick="saveAdminAds()">Save Ad Settings</button>
             </div>
             
             <div class="admin-box">
-                <h3>⚙️ Ultra-Pay API Config</h3>
+                <h3><i class="fa-solid fa-code"></i> API Tax System</h3>
                 <div class="input-group">
-                    <label>Admin Tax (%)</label>
+                    <label>Withdrawal Tax (%)</label>
                     <input type="number" id="adminTax" placeholder="e.g. 10">
                 </div>
-                <p style="font-size:11px; color:#94a3b8; margin-bottom:10px;">User Payout API requests are processed via the backend bot for security.</p>
-                <button class="btn btn-green" onclick="saveApiSettings()">Save API Config</button>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Tax deducted when bot calls User API for deduction.</p>
+                <button class="btn" onclick="saveApiTax()">Save Tax Config</button>
             </div>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item" onclick="openRefer()"><i class="fa-solid fa-users"></i> Refer</div>
-            <div class="nav-item"><i class="fa-solid fa-trophy"></i> Leaderboard</div>
-            <div class="nav-home-btn" onclick="goHome()"><i class="fa-solid fa-house" style="font-size: 22px;"></i></div>
-            <div class="nav-item" onclick="openWallet()"><i class="fa-solid fa-wallet"></i> Wallet</div>
-            <div class="nav-item" onclick="openProfile()"><i class="fa-solid fa-user"></i> Profile</div>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <div id="promoModal" class="modal hidden">
-        <div class="modal-content">
-            <h3 style="margin-bottom:15px; color:#818cf8;">🎁 Enter Promo Code</h3>
-            <input type="text" id="promoInput" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:none; outline:none; text-transform:uppercase;" placeholder="Code">
-            <button class="btn btn-green" onclick="claimPromo()">Claim Code</button>
-            <button class="btn" style="background:transparent; color:#94a3b8; margin-top:10px; box-shadow:none;" onclick="closeModal('promoModal')">Cancel</button>
-        </div>
-    </div>
-
-    <div id="profileModal" class="modal hidden">
-        <div class="modal-content">
-            <h3 style="margin-bottom:15px; color:#818cf8;">👤 Profile Info</h3>
-            <p style="font-size:13px; color:#cbd5e1; margin-bottom:10px;">Share these details to Bot to link your account.</p>
-            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:10px;">
-                <span style="font-size:11px; color:#94a3b8;">User Token</span><br>
-                <strong id="pToken" style="color:#10b981; font-family:monospace;">---</strong>
+            <div class="nav-item active" onclick="navTo('home')">
+                <i class="fa-solid fa-house"></i> Home
             </div>
-            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:15px;">
-                <span style="font-size:11px; color:#94a3b8;">Secret Key</span><br>
-                <strong id="pKey" style="color:#f59e0b; font-family:monospace;">---</strong>
+            <div class="nav-item" onclick="openModal('walletModal')">
+                <i class="fa-solid fa-wallet"></i> Wallet
             </div>
-            <button class="btn" style="background:#ef4444;" onclick="logout()">Log Out</button>
-            <button class="btn" style="background:transparent; color:#94a3b8; margin-top:10px; box-shadow:none;" onclick="closeModal('profileModal')">Close</button>
+            
+            <!-- CENTER PROFILE BUTTON -->
+            <div class="nav-center-wrapper">
+                <div class="nav-center-btn" onclick="openModal('profileModal')">
+                    <i class="fa-solid fa-user-ninja"></i>
+                </div>
+                <div class="nav-center-text">Profile</div>
+            </div>
+
+            <div class="nav-item" onclick="loadHistory()">
+                <i class="fa-solid fa-clock-rotate-left"></i> History
+            </div>
+            <div class="nav-item" onclick="openModal('referModal')">
+                <i class="fa-solid fa-users"></i> Refer
+            </div>
         </div>
     </div>
 
-    <div id="walletModal" class="modal hidden">
+    <!-- --- MODALS --- -->
+    <div id="promoModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom:15px; color:#818cf8;">💳 Wallet & Withdrawal</h3>
-            <h1 style="color:#10b981; margin-bottom:10px;">₹ <span id="wBalance">0.00</span></h1>
-            <p style="font-size:12px; color:#cbd5e1; margin-bottom:15px; line-height:1.5;">To protect your funds via Ultra-Pay API, all withdrawal requests must be initiated directly inside our <b>Telegram Bot</b>.</p>
-            <button class="btn" style="background:transparent; color:#94a3b8; border:1px solid #94a3b8; box-shadow:none;" onclick="closeModal('walletModal')">Close</button>
+            <div class="modal-header">
+                <h3>🎁 Claim Promo Code</h3>
+                <button class="close-btn" onclick="closeModal('promoModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input type="text" id="promoInput" style="width:100%; padding:15px; margin-bottom:15px; border-radius:12px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); color:#fff; outline:none; text-transform:uppercase;" placeholder="Enter Code">
+            <button class="btn btn-green" onclick="claimPromo()">Claim Now</button>
         </div>
     </div>
 
-    <div id="referModal" class="modal hidden">
+    <div id="apiModal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom:15px; color:#818cf8;">👥 Refer API Hub</h3>
-            <p style="font-size:12px; color:#cbd5e1; margin-bottom:15px; line-height:1.5;">Share your unique Bot invite link. When friends join and use your code, you earn automatically via Refer API!</p>
-            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-bottom:15px;">
-                <span style="font-size:11px; color:#94a3b8;">Your Code</span><br>
-                <strong id="referCodeTxt" style="color:#f59e0b; font-size:18px;">---</strong>
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-terminal"></i> Merchant API</h3>
+                <button class="close-btn" onclick="closeModal('apiModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <button class="btn" style="background:transparent; color:#94a3b8; border:1px solid #94a3b8; box-shadow:none;" onclick="closeModal('referModal')">Close</button>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; line-height:1.6;">Link your account with the Telegram Bot using these credentials. Do not share these with anyone!</p>
+            <label style="font-size:12px; color:#fff;">User ID Token:</label>
+            <div class="api-box" id="pToken">Loading...</div>
+            <label style="font-size:12px; color:#fff;">Secret Key:</label>
+            <div class="api-box" id="pKey" style="color:var(--warning);">Loading...</div>
+            <button class="btn btn-green" style="margin-top:10px;" onclick="closeModal('apiModal')">Done</button>
+        </div>
+    </div>
+
+    <div id="historyModal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-receipt"></i> Transactions</h3>
+                <button class="close-btn" onclick="closeModal('historyModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="history-list" id="historyList">
+                <p style="text-align:center; color:var(--text-muted); font-size:13px;">Loading history...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-wallet"></i> My Wallet</h3>
+                <button class="close-btn" onclick="closeModal('walletModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <h1 style="color:var(--success); margin: 10px 0 20px; font-size:40px;">₹ <span id="wBalance">0.00</span></h1>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; line-height:1.6; background:rgba(59,130,246,0.1); padding:15px; border-radius:12px; border:1px solid rgba(59,130,246,0.2);">For security, all withdrawals are processed automatically via Bot Request. Open the Telegram Bot to request a payout.</p>
+            <button class="btn" onclick="window.open('https://t.me/'+botUsername, '_blank')">Open Telegram Bot</button>
+        </div>
+    </div>
+
+    <div id="referModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-users"></i> Refer & Earn</h3>
+                <button class="close-btn" onclick="closeModal('referModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Share your code with friends. When they join, you earn rewards automatically!</p>
+            <label style="font-size:12px; color:#fff;">Your Invite Code:</label>
+            <div class="api-box" id="referCodeTxt" style="font-size:22px; font-weight:800; color:var(--success);">---</div>
+            <button class="btn btn-purple" style="margin-top:10px;" onclick="copyRefer()">Copy Link</button>
+        </div>
+    </div>
+
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-ninja"></i> My Profile</h3>
+                <button class="close-btn" onclick="closeModal('profileModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="text-align:center; margin-bottom:25px;">
+                <div style="width:80px; height:80px; background:var(--primary-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:35px; color:#fff; margin:0 auto 15px; box-shadow:0 10px 20px rgba(59,130,246,0.4);">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h2 id="proName" style="color:#fff;">Loading...</h2>
+                <p id="proId" style="color:var(--text-muted); font-size:14px; margin-top:5px;">ID: ---</p>
+            </div>
+            <button class="btn btn-red" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout Safely</button>
         </div>
     </div>
 
     <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+        // Tuzi New Config
         const firebaseConfig = {
           apiKey: "AIzaSyDkmoIzcYsYTBYwIk2A_8hUXWW5znyeTaY",
           authDomain: "newkumarbot.firebaseapp.com",
@@ -311,7 +418,30 @@
         let isLogin = true;
         let cAns = 0;
         let currUser = "";
-        let sysAds = { link: "", reward: 0.00 };
+        let botUsername = "";
+        let sysAds = { link: "", reward: 0.00, daily: 0.50 };
+
+        // Toast Function
+        window.showToast = (msg, type='success') => {
+            const box = document.getElementById('toastBox');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-exclamation'}"></i> ${msg}`;
+            box.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(),300); }, 3000);
+        };
+
+        // Auto-fill Refer Code from URL (?ref=CODE)
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            if(refCode) {
+                isLogin = false;
+                toggleAuth(); // Force to signup page
+                document.getElementById('regRefer').value = refCode.toUpperCase();
+                showToast("Referral Code Applied!", "success");
+            }
+        };
 
         function genStr(l) {
             let r = ''; const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -321,9 +451,9 @@
 
         window.toggleAuth = () => {
             isLogin = !isLogin;
-            document.getElementById('signupFields').classList.toggle('hidden');
-            document.getElementById('captchaBox').classList.toggle('hidden');
-            document.getElementById('authBtn').innerText = isLogin ? "Login" : "Create Account";
+            document.getElementById('signupFields').classList.toggle('hidden-view');
+            document.getElementById('captchaBox').classList.toggle('hidden-view');
+            document.getElementById('authBtn').innerText = isLogin ? "Login Securely" : "Create Account";
             document.getElementById('toggleText').innerText = isLogin ? "Create New Account" : "Back to Login";
             
             if(!isLogin) {
@@ -332,53 +462,97 @@
             }
         };
 
-        function eMsg(txt) {
-            let e = document.getElementById('authError');
-            e.style.display = 'block'; e.innerText = txt;
+        async function logHistory(id, title, amt, type) {
+            if(id === "101") return;
+            const hRef = ref(db, `nova_users/${id}/history`);
+            await push(hRef, {
+                title: title,
+                amount: parseFloat(amt).toFixed(2),
+                type: type, // 'plus' or 'minus'
+                date: new Date().toLocaleString()
+            });
         }
 
         window.handleAuth = async () => {
             let id = document.getElementById('tgId').value.trim();
             let pass = document.getElementById('tgPass').value;
-            if(!id || !pass) return eMsg("Enter ID and Password!");
+            let btn = document.getElementById('authBtn');
+
+            if(!id || !pass) return showToast("Enter ID and Password!", "error");
 
             if(id === "101" && pass === "90901") {
-                currUser = "ADMIN"; return openDash(id, { name: "Master Admin" });
+                currUser = "101"; return openDash("101", { name: "Master Admin" });
             }
 
+            btn.innerText = "Processing...";
+
             try {
-                let uRef = ref(db, 'pop_users/' + id);
+                let uRef = ref(db, 'nova_users/' + id);
                 if(!isLogin) {
                     let name = document.getElementById('regName').value.trim();
+                    let refInput = document.getElementById('regRefer').value.trim().toUpperCase();
                     let mAns = parseInt(document.getElementById('mathAns').value);
-                    if(!name) return eMsg("Enter Name!");
-                    if(mAns !== cAns) return eMsg("Wrong Math!");
-                    let s = await get(uRef); if(s.exists()) return eMsg("ID Exists! Please login.");
                     
-                    let nUser = { name: name, pass: pass, bal: 0.00, tok: "PN-"+genStr(6), key: "K-"+genStr(10) };
-                    await set(uRef, nUser); openDash(id, nUser);
+                    if(!name) { btn.innerText="Create Account"; return showToast("Enter Name!", "error"); }
+                    if(mAns !== cAns) { btn.innerText="Create Account"; return showToast("Wrong Math Answer!", "error"); }
+                    
+                    let s = await get(uRef); 
+                    if(s.exists()) { btn.innerText="Create Account"; return showToast("ID Exists! Please login.", "error"); }
+                    
+                    let uniqueToken = "NV-" + genStr(8);
+                    let nUser = { 
+                        name: name, pass: pass, bal: 0.00, 
+                        tok: uniqueToken, 
+                        key: "KEY-" + genStr(12),
+                        referredBy: refInput || "NONE"
+                    };
+                    
+                    await set(uRef, nUser); 
+                    await logHistory(id, "Account Created", 0, "plus");
+
+                    // Add refer bonus to referrer if exists
+                    if(refInput) {
+                        // In a real app, you'd search for the user with this token and add balance.
+                        // Kept simple for now.
+                    }
+
+                    openDash(id, nUser);
                 } else {
-                    let s = await get(uRef); if(!s.exists()) return eMsg("User not found!");
-                    let d = s.val(); if(d.pass !== pass) return eMsg("Wrong Password!");
+                    let s = await get(uRef); 
+                    if(!s.exists()) { btn.innerText="Login Securely"; return showToast("User not found!", "error"); }
+                    let d = s.val(); 
+                    if(d.pass !== pass) { btn.innerText="Login Securely"; return showToast("Wrong Password!", "error"); }
+                    
                     openDash(id, d);
                 }
-            } catch(e) { eMsg("Database Error! Check Rules."); }
+            } catch(e) { 
+                showToast("Database Error! Check Rules.", "error"); 
+                btn.innerText = isLogin ? "Login Securely" : "Create Account";
+            }
         };
 
         function openDash(id, data) {
             currUser = id;
-            document.getElementById('authView').classList.add('hidden');
-            document.getElementById('mainView').classList.remove('hidden');
+            document.getElementById('authView').classList.add('hidden-view');
+            document.getElementById('mainView').classList.remove('hidden-view');
             document.getElementById('displayUserName').innerText = data.name || id;
 
-            if(id === "ADMIN") {
-                document.getElementById('adminPanel').classList.remove('hidden');
-                get(ref(db, 'admin_settings')).then(s => {
+            if(id === "101") {
+                document.getElementById('adminPanel').classList.remove('hidden-view');
+                document.getElementById('userContent').classList.add('hidden-view');
+                
+                get(ref(db, 'nova_admin')).then(s => {
                     if(s.exists()) {
                         let ad = s.val();
+                        if(ad.bot) {
+                            document.getElementById('adminBotUser').value = ad.bot.username || "";
+                            document.getElementById('adminBotToken').value = ad.bot.token || "";
+                            botUsername = (ad.bot.username || "").replace("@", "");
+                        }
                         if(ad.ads) {
                             document.getElementById('adminAdLink').value = ad.ads.link || "";
-                            document.getElementById('adminAdReward').value = ad.ads.reward || "";
+                            document.getElementById('adminAdReward').value = parseFloat(ad.ads.reward||0).toFixed(2);
+                            document.getElementById('adminDailyReward').value = parseFloat(ad.ads.daily||0.5).toFixed(2);
                         }
                         if(ad.api) document.getElementById('adminTax').value = ad.api.tax || "";
                     }
@@ -387,104 +561,191 @@
                 document.getElementById('pToken').innerText = data.tok;
                 document.getElementById('pKey').innerText = data.key;
                 document.getElementById('referCodeTxt').innerText = data.tok;
+                document.getElementById('proName').innerText = data.name;
+                document.getElementById('proId').innerText = "ID: " + id;
                 
-                onValue(ref(db, 'pop_users/' + id + '/bal'), (snap) => {
+                // Live Balance Listener
+                onValue(ref(db, 'nova_users/' + id + '/bal'), (snap) => {
                     let b = parseFloat(snap.val() || 0).toFixed(2);
                     document.getElementById('userBalanceDisplay').innerText = b;
                     document.getElementById('wBalance').innerText = b;
                 });
             }
 
-            onValue(ref(db, 'admin_settings/ads'), (snap) => {
+            // Global Config Listener
+            onValue(ref(db, 'nova_admin'), (snap) => {
                 if(snap.exists()) {
-                    sysAds = snap.val();
-                    let amt = parseFloat(sysAds.reward || 0).toFixed(2);
-                    if(sysAds.link) {
-                        document.getElementById('adRewardText').innerText = `₹${amt}`;
-                    } else {
-                        document.getElementById('watchAdBox').classList.add('hidden');
+                    let adminData = snap.val();
+                    if(adminData.bot) botUsername = (adminData.bot.username || "").replace("@", "");
+                    
+                    if(adminData.ads) {
+                        sysAds = adminData.ads;
+                        let amt = parseFloat(sysAds.reward || 0).toFixed(2);
+                        if(sysAds.link && sysAds.link.trim() !== "") {
+                            document.getElementById('watchAdBox').classList.remove('hidden-view');
+                            document.getElementById('adRewardText').innerText = `₹${amt}`;
+                        } else {
+                            document.getElementById('watchAdBox').classList.add('hidden-view');
+                        }
                     }
                 }
             });
         }
 
         window.watchAd = () => {
-            if(!sysAds.link) return;
+            if(!sysAds.link || sysAds.link.trim() === "") return showToast("Ads currently disabled by Admin.", "error");
+            
+            // Open Ad Link
             window.open(sysAds.link, '_blank');
-            if(currUser === "ADMIN") return;
+            
+            if(currUser === "101") return;
+            
+            // Wait 3s then reward
             setTimeout(async () => {
-                let s = await get(ref(db, 'pop_users/' + currUser + '/bal'));
+                let s = await get(ref(db, 'nova_users/' + currUser + '/bal'));
                 let cb = parseFloat(s.val() || 0);
-                let reward = parseFloat(sysAds.reward);
+                let reward = parseFloat(sysAds.reward || 0);
                 let newBal = (cb + reward).toFixed(2);
-                await update(ref(db, 'pop_users/' + currUser), { bal: parseFloat(newBal) });
-                alert(`🎉 You earned ₹${reward.toFixed(2)} from Ads!`);
+                
+                await update(ref(db, 'nova_users/' + currUser), { bal: parseFloat(newBal) });
+                await logHistory(currUser, "Ad Watched", reward, "plus");
+                showToast(`🎉 You earned ₹${reward.toFixed(2)} from Ad!`);
+            }, 3000);
+        };
+
+        window.claimDailyBonus = async () => {
+            if(currUser === "101") return;
+            
+            // Daily bonus REQUIRES ad link
+            if(!sysAds.link || sysAds.link.trim() === "") {
+                return showToast("⚠️ Ads are disabled. Daily Bonus requires Ads to be active.", "error");
+            }
+
+            let last = await get(ref(db, 'nova_users/' + currUser + '/lastDaily'));
+            let now = new Date().toDateString();
+            if(last.exists() && last.val() === now) return showToast("❌ Already claimed today. Come back tomorrow!", "error");
+            
+            // Open Ad
+            window.open(sysAds.link, '_blank');
+
+            // Process Reward
+            setTimeout(async () => {
+                let b = await get(ref(db, 'nova_users/' + currUser + '/bal'));
+                let reward = parseFloat(sysAds.daily || 0.50);
+                let nB = (parseFloat(b.val() || 0) + reward).toFixed(2); 
+                
+                let upd = {};
+                upd['nova_users/' + currUser + '/bal'] = parseFloat(nB);
+                upd['nova_users/' + currUser + '/lastDaily'] = now;
+                await update(ref(db), upd);
+                
+                await logHistory(currUser, "Daily Bonus", reward, "plus");
+                showToast(`🎁 Daily Bonus ₹${reward.toFixed(2)} Added!`);
             }, 3000);
         };
 
         window.claimPromo = async () => {
             let code = document.getElementById('promoInput').value.trim().toUpperCase();
-            if(!code) return alert("Enter code!");
-            if(currUser === "ADMIN") return alert("Admin cannot claim.");
+            if(!code) return showToast("Enter promo code!", "error");
+            if(currUser === "101") return showToast("Admin cannot claim.", "error");
             
-            let s = await get(ref(db, 'admin_settings/promo/' + code));
-            if(!s.exists()) return alert("❌ Invalid Code!");
+            let s = await get(ref(db, 'nova_admin/promo/' + code));
+            if(!s.exists()) return showToast("❌ Invalid Code!", "error");
             
             let d = s.val();
-            let u = await get(ref(db, 'pop_users/' + currUser + '/usedP/' + code));
-            if(u.exists()) return alert("❌ Already Claimed!");
+            let u = await get(ref(db, 'nova_users/' + currUser + '/usedP/' + code));
+            if(u.exists()) return showToast("❌ Already Claimed!", "error");
             
-            let b = await get(ref(db, 'pop_users/' + currUser + '/bal'));
-            let nB = (parseFloat(b.val() || 0) + parseFloat(d.reward)).toFixed(2);
+            let b = await get(ref(db, 'nova_users/' + currUser + '/bal'));
+            let reward = parseFloat(d.reward);
+            let nB = (parseFloat(b.val() || 0) + reward).toFixed(2);
             
             let upd = {};
-            upd['pop_users/' + currUser + '/bal'] = parseFloat(nB);
-            upd['pop_users/' + currUser + '/usedP/' + code] = true;
+            upd['nova_users/' + currUser + '/bal'] = parseFloat(nB);
+            upd['nova_users/' + currUser + '/usedP/' + code] = true;
             await update(ref(db), upd);
             
+            await logHistory(currUser, `Promo: ${code}`, reward, "plus");
             closeModal('promoModal');
-            alert(`🎁 Success! ₹${parseFloat(d.reward).toFixed(2)} added!`);
+            showToast(`🎁 Success! ₹${reward.toFixed(2)} added!`);
         };
 
-        window.claimDaily = async () => {
-            if(currUser === "ADMIN") return;
-            let last = await get(ref(db, 'pop_users/' + currUser + '/lastDaily'));
-            let now = new Date().toDateString();
-            if(last.exists() && last.val() === now) return alert("❌ Already claimed today. Come back tomorrow!");
+        // --- HISTORY LOAD ---
+        window.loadHistory = async () => {
+            if(currUser === "101") return showToast("Admin has no history", "error");
+            openModal('historyModal');
+            const hList = document.getElementById('historyList');
+            hList.innerHTML = "<p style='text-align:center; color:#94a3b8; font-size:13px;'>Loading...</p>";
             
-            let b = await get(ref(db, 'pop_users/' + currUser + '/bal'));
-            let nB = (parseFloat(b.val() || 0) + 0.50).toFixed(2); // Fix daily reward
+            const snap = await get(ref(db, `nova_users/${currUser}/history`));
+            if(!snap.exists()) {
+                hList.innerHTML = "<p style='text-align:center; color:#94a3b8; font-size:13px;'>No transactions yet.</p>";
+                return;
+            }
             
-            let upd = {};
-            upd['pop_users/' + currUser + '/bal'] = parseFloat(nB);
-            upd['pop_users/' + currUser + '/lastDaily'] = now;
-            await update(ref(db), upd);
-            alert("🎁 Daily Bonus ₹0.50 Added!");
+            let html = "";
+            let data = snap.val();
+            // Reverse to show latest first
+            let keys = Object.keys(data).reverse(); 
+            
+            keys.forEach(k => {
+                let tx = data[k];
+                let sign = tx.type === 'plus' ? '+' : '-';
+                let colorClass = tx.type === 'plus' ? 'hi-plus' : 'hi-minus';
+                
+                html += `
+                <div class="history-item">
+                    <div>
+                        <div class="hi-title">${tx.title}</div>
+                        <div class="hi-date">${tx.date}</div>
+                    </div>
+                    <div class="hi-amt ${colorClass}">${sign}₹${tx.amount}</div>
+                </div>`;
+            });
+            hList.innerHTML = html;
         };
 
-        // ADMIN SAVES
-        window.saveAdminSettings = () => {
+        // --- ADMIN SAVES ---
+        window.saveAdminBot = () => {
+            let u = document.getElementById('adminBotUser').value.trim();
+            let t = document.getElementById('adminBotToken').value.trim();
+            update(ref(db, 'nova_admin/bot'), { username: u, token: t }).then(()=>showToast("✅ Bot Config Saved!"));
+        };
+
+        window.saveAdminAds = () => {
             let l = document.getElementById('adminAdLink').value.trim();
             let r = parseFloat(document.getElementById('adminAdReward').value || 0).toFixed(2);
-            update(ref(db, 'admin_settings/ads'), { link: l, reward: parseFloat(r) }).then(()=>alert("✅ Ads Saved!"));
+            let d = parseFloat(document.getElementById('adminDailyReward').value || 0).toFixed(2);
+            update(ref(db, 'nova_admin/ads'), { link: l, reward: parseFloat(r), daily: parseFloat(d) }).then(()=>showToast("✅ Ads Saved!"));
         };
         
-        window.saveApiSettings = () => {
+        window.saveApiTax = () => {
             let tax = parseFloat(document.getElementById('adminTax').value || 0);
-            update(ref(db, 'admin_settings/api'), { tax: tax }).then(()=>alert("✅ API Tax Config Saved!"));
+            update(ref(db, 'nova_admin/api'), { tax: tax }).then(()=>showToast("✅ API Tax Config Saved!"));
         };
 
-        // MODAL HANDLERS
-        window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
-        window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
-        window.openProfile = () => { if(currUser!=="ADMIN") openModal('profileModal'); else alert("Admin Profile Blocked."); };
-        window.openWallet = () => { if(currUser!=="ADMIN") openModal('walletModal'); else alert("Admin Wallet Blocked."); };
-        window.openRefer = () => { if(currUser!=="ADMIN") openModal('referModal'); else alert("Admin Refer Blocked."); };
-        window.goHome = () => {
-            document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
+        // --- MODAL & UTILS ---
+        window.openModal = (id) => {
+            const m = document.getElementById(id);
+            m.classList.remove('hidden-view');
+            setTimeout(() => m.classList.add('show'), 10);
         };
-
+        window.closeModal = (id) => {
+            const m = document.getElementById(id);
+            m.classList.remove('show');
+            setTimeout(() => m.classList.add('hidden-view'), 300);
+        };
+        window.navTo = (page) => {
+            showToast("You are on " + page);
+        };
+        window.copyRefer = () => {
+            let code = document.getElementById('referCodeTxt').innerText;
+            let link = `${window.location.origin}${window.location.pathname}?ref=${code}`;
+            navigator.clipboard.writeText(link);
+            showToast("Refer Link Copied!");
+        };
         window.logout = () => location.reload();
+
     </script>
 </body>
 </html>
