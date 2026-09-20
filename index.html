@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NovaPay - Ultimate Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -19,81 +19,79 @@
             --text-main: #f8fafc;
             --text-muted: #64748b;
             --glass-bg: rgba(21, 30, 50, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; padding-bottom: 90px; }
+        body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; padding-bottom: 100px; }
 
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 
         /* --- TOAST NOTIFICATION --- */
-        #toastBox { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: var(--bg-card); border-left: 4px solid var(--primary); padding: 15px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 600; animation: slideIn 0.3s ease forwards; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(10px); }
+        #toastBox { position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+        .toast { background: rgba(15, 23, 42, 0.95); border-left: 4px solid var(--primary); padding: 16px 24px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); font-size: 14px; font-weight: 600; animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(10px); color: #fff; pointer-events: all; }
         .toast.error { border-left-color: var(--danger); }
         .toast.success { border-left-color: var(--success); }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInToast { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* --- AUTH SCREEN --- */
         .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; background: radial-gradient(circle at top left, #1e293b 0%, #0a0f1d 100%); }
         .auth-container { width: 100%; max-width: 420px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 30px; padding: 40px 30px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transition: 0.5s; }
-        .auth-header { text-align: center; margin-bottom: 30px; }
-        .auth-header h1 { font-size: 38px; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        .auth-header { text-align: center; margin-bottom: 35px; }
+        .auth-header h1 { font-size: 40px; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; margin-bottom: 5px; }
         
-        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group { margin-bottom: 22px; position: relative; }
         .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group input { width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.4); border: 2px solid transparent; border-radius: 16px; color: #fff; font-size: 16px; font-weight: 500; outline: none; transition: 0.3s; }
+        .input-group input { width: 100%; padding: 16px 20px; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255,255,255,0.05); border-radius: 16px; color: #fff; font-size: 16px; font-weight: 500; outline: none; transition: 0.3s; }
         .input-group input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.6); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
         
-        .btn { width: 100%; padding: 18px; background: var(--primary-gradient); border: none; border-radius: 16px; color: white; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); text-transform: uppercase; letter-spacing: 1.5px; }
+        .btn { width: 100%; padding: 18px; background: var(--primary-gradient); border: none; border-radius: 16px; color: white; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); text-transform: uppercase; letter-spacing: 1.5px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn:active { transform: scale(0.95); }
         .btn-green { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); }
         .btn-red { background: linear-gradient(135deg, #ef4444, #b91c1c); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); }
-        .btn-dark { background: #1e293b; box-shadow: none; border: 1px solid #334155; }
         
         .switch-text { text-align: center; font-size: 14px; color: var(--text-muted); margin-top: 25px; cursor: pointer; font-weight: 500; }
-        .switch-text span { color: var(--primary); font-weight: 800; text-decoration: none; position: relative; }
-        .switch-text span::after { content: ''; position: absolute; width: 100%; height: 2px; bottom: -2px; left: 0; background: var(--primary); transform: scaleX(0); transition: 0.3s; }
+        .switch-text span { color: var(--primary); font-weight: 800; text-decoration: none; position: relative; padding-bottom: 2px; }
+        .switch-text span::after { content: ''; position: absolute; width: 100%; height: 2px; bottom: 0; left: 0; background: var(--primary); transform: scaleX(0); transition: 0.3s; }
         .switch-text:hover span::after { transform: scaleX(1); }
 
-        #captchaBox { background: rgba(59, 130, 246, 0.05); padding: 15px; border-radius: 16px; border: 1px dashed rgba(59, 130, 246, 0.3); margin-bottom: 20px; }
+        #captchaBox { background: rgba(59, 130, 246, 0.05); padding: 20px; border-radius: 16px; border: 1px dashed rgba(59, 130, 246, 0.3); margin-bottom: 25px; text-align: center; }
         
         /* --- BANNED SCREEN --- */
-        .banned-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background: #000; padding: 30px; text-align: center; }
-        .banned-screen i { font-size: 80px; color: var(--danger); margin-bottom: 20px; text-shadow: 0 0 30px rgba(239,68,68,0.5); }
-        .banned-screen h1 { font-size: 30px; color: #fff; margin-bottom: 10px; }
-        .banned-screen p { color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+        .banned-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background: #050505; padding: 30px; text-align: center; }
+        .banned-screen i { font-size: 90px; color: var(--danger); margin-bottom: 25px; text-shadow: 0 0 40px rgba(239,68,68,0.6); }
+        .banned-screen h1 { font-size: 34px; color: #fff; margin-bottom: 15px; font-weight: 900; }
+        .banned-screen p { color: var(--text-muted); font-size: 16px; line-height: 1.7; max-width: 400px; }
 
         /* --- DASHBOARD HEADER --- */
-        .dash-header { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(15,23,29,0.9), transparent); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
-        .dash-title { font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
-        .user-greeting { font-size: 15px; color: var(--text-muted); font-weight: 500; }
-        .bal-box { text-align: right; background: rgba(16, 185, 129, 0.1); padding: 10px 18px; border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 5px 15px rgba(16,185,129,0.1); cursor: pointer; transition: 0.3s; }
-        .bal-box:hover { transform: translateY(-3px); }
-        .bal-label { font-size: 11px; color: var(--success); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.8; }
-        .bal-amount { font-size: 22px; font-weight: 900; color: var(--success); }
+        .dash-header { padding: 35px 25px 25px; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(180deg, rgba(15,23,29,0.95) 0%, transparent 100%); position: sticky; top: 0; z-index: 50; }
+        .dash-title { font-size: 30px; font-weight: 900; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .user-greeting { font-size: 16px; color: var(--text-muted); font-weight: 500; margin-top: 5px; }
+        .bal-box { text-align: right; background: rgba(16, 185, 129, 0.1); padding: 12px 20px; border-radius: 18px; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 8px 25px rgba(16,185,129,0.15); cursor: pointer; transition: 0.3s; }
+        .bal-box:active { transform: scale(0.95); }
+        .bal-label { font-size: 12px; color: var(--success); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.9; }
+        .bal-amount { font-size: 24px; font-weight: 900; color: var(--success); margin-top: 2px; }
 
         /* --- MISSION CARD --- */
-        .mission-card { margin: 0 20px 30px; padding: 30px 25px; border-radius: 30px; background: var(--primary-gradient); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3); position: relative; overflow: hidden; }
-        .mission-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; }
-        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; position: relative; z-index: 2; }
-        .mission-title { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .mission-badge { background: rgba(0,0,0,0.3); padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: 800; backdrop-filter: blur(5px); }
-        .mission-sub { font-size: 14px; color: rgba(255,255,255,0.9); margin-bottom: 25px; position: relative; z-index: 2; font-weight: 500; line-height: 1.5; }
-        .mission-btn { background: rgba(255,255,255,0.25); padding: 15px; border-radius: 16px; text-align: center; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); text-transform: uppercase; letter-spacing: 1px; }
-        .mission-btn:hover { background: rgba(255,255,255,0.35); transform: translateY(-2px); }
+        .mission-card { margin: 0 25px 35px; padding: 35px 30px; border-radius: 35px; background: var(--primary-gradient); box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3); position: relative; overflow: hidden; }
+        .mission-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .mission-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; position: relative; z-index: 2; }
+        .mission-title { font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .mission-badge { background: rgba(0,0,0,0.3); padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 800; backdrop-filter: blur(5px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .mission-sub { font-size: 15px; color: rgba(255,255,255,0.95); margin-bottom: 25px; position: relative; z-index: 2; font-weight: 500; line-height: 1.6; }
+        .mission-btn { background: rgba(255,255,255,0.25); padding: 16px; border-radius: 18px; text-align: center; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .mission-btn:active { transform: scale(0.97); }
 
         /* --- MAIN GRID --- */
-        .section-title { font-size: 20px; font-weight: 800; color: #fff; margin: 0 20px 20px; display: flex; align-items: center; justify-content: space-between; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 0 20px 20px; }
-        .grid-item { background: var(--bg-card); border-radius: 24px; padding: 30px 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .section-title { font-size: 22px; font-weight: 800; color: #fff; margin: 0 25px 20px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 0 25px 25px; }
+        .grid-item { background: var(--bg-card); border-radius: 28px; padding: 35px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid var(--glass-border); box-shadow: 0 15px 35px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
         .grid-item::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%); pointer-events: none; }
-        .grid-item:active { transform: scale(0.95); }
-        .grid-icon { width: 65px; height: 65px; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 28px; color: #fff; margin-bottom: 18px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.3s; }
-        .grid-item:hover .grid-icon { transform: translateY(-5px); }
+        .grid-item:active { transform: scale(0.95); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .grid-icon { width: 70px; height: 70px; border-radius: 22px; display: flex; justify-content: center; align-items: center; font-size: 30px; color: #fff; margin-bottom: 20px; box-shadow: 0 12px 30px rgba(0,0,0,0.3); transition: 0.3s; }
         
         .bg-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
         .bg-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
@@ -102,83 +100,85 @@
         .bg-orange { background: linear-gradient(135deg, #f97316, #c2410c); }
         .bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
         
-        .grid-text { font-size: 16px; font-weight: 700; color: #e2e8f0; }
-        .ad-amt { font-size: 13px; color: #fff; font-weight: 800; background: var(--success); padding: 4px 10px; border-radius: 12px; margin-top: 8px; display: inline-block; box-shadow: 0 4px 10px rgba(16,185,129,0.3); }
+        .grid-text { font-size: 17px; font-weight: 700; color: #f8fafc; }
+        .ad-amt { font-size: 14px; color: #fff; font-weight: 800; background: var(--success); padding: 5px 12px; border-radius: 14px; margin-top: 10px; display: inline-block; box-shadow: 0 5px 15px rgba(16,185,129,0.3); }
 
         /* --- ADMIN PANEL --- */
-        .admin-section { padding: 0 20px 30px; }
-        .admin-box { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 24px; padding: 30px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .admin-box h3 { color: #fca5a5; margin-bottom: 25px; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; border-bottom: 1px dashed rgba(239,68,68,0.2); padding-bottom: 15px; }
+        .admin-section { padding: 0 25px 40px; }
+        .admin-box { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 28px; padding: 35px 25px; margin-bottom: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        .admin-box h3 { color: #fca5a5; margin-bottom: 25px; font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 12px; border-bottom: 2px dashed rgba(239,68,68,0.2); padding-bottom: 15px; }
         .admin-row { display: flex; gap: 15px; margin-bottom: 15px;}
         .admin-row .input-group { flex: 1; margin-bottom: 0; }
 
         /* --- BOTTOM NAVIGATION (PROFILE IN CENTER) --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; background: rgba(15, 23, 29, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--glass-border); z-index: 100; border-radius: 35px 35px 0 0; padding: 0 10px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; background: rgba(15, 23, 29, 0.98); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--glass-border); z-index: 100; border-radius: 40px 40px 0 0; padding: 0 15px; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; position: relative; }
-        .nav-item i { font-size: 24px; margin-bottom: 6px; transition: 0.3s; }
-        .nav-item:hover { color: #fff; }
-        .nav-item:hover i { transform: translateY(-4px); }
+        .nav-item i { font-size: 24px; margin-bottom: 8px; transition: 0.3s; }
         .nav-item.active { color: var(--primary); }
-        .nav-item.active i { filter: drop-shadow(0 0 10px rgba(59,130,246,0.5)); }
+        .nav-item.active i { filter: drop-shadow(0 0 12px rgba(59,130,246,0.6)); transform: translateY(-3px); }
         
         .nav-center-wrapper { position: relative; flex: 1; display: flex; justify-content: center; }
         .nav-center-btn { 
-            position: absolute; top: -45px; width: 75px; height: 75px;
+            position: absolute; top: -50px; width: 80px; height: 80px;
             background: var(--primary-gradient); border-radius: 50%;
             display: flex; justify-content: center; align-items: center; color: #fff;
-            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
             border: 8px solid var(--bg-dark); cursor: pointer; transition: 0.3s;
         }
-        .nav-center-btn i { font-size: 30px; }
+        .nav-center-btn i { font-size: 32px; }
         .nav-center-btn:active { transform: scale(0.9); }
-        .nav-center-text { position: absolute; bottom: -20px; font-size: 12px; font-weight: 700; color: var(--text-muted); }
+        .nav-center-text { position: absolute; bottom: -20px; font-size: 13px; font-weight: 800; color: var(--text-muted); }
 
-        /* --- MODALS (FULL SCREEN & POPUPS) --- */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 15, 29, 0.95); z-index: 9999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .modal.show { opacity: 1; pointer-events: all; }
-        .modal-content { background: var(--bg-card); padding: 35px 30px; border-radius: 30px; width: 90%; max-width: 450px; border: 1px solid var(--glass-border); transform: translateY(50px) scale(0.9); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 30px 60px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto; }
+        /* --- MODALS (FLAWLESS CSS LOGIC) --- */
+        /* Using visibility & opacity ensures smooth animations without instantly snapping closed */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 15, 29, 0.85); z-index: 9999; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .modal.show { opacity: 1; visibility: visible; }
+        
+        .modal-content { background: var(--bg-card); padding: 40px 30px; border-radius: 35px; width: 92%; max-width: 450px; border: 1px solid var(--glass-border); transform: translateY(40px) scale(0.95); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 35px 60px rgba(0,0,0,0.6); max-height: 85vh; overflow-y: auto; position: relative; }
         .modal.show .modal-content { transform: translateY(0) scale(1); }
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .modal-header h3 { font-size: 24px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; }
-        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: var(--text-muted); cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; font-size: 18px; }
-        .close-btn:hover { background: rgba(239,68,68,0.2); color: var(--danger); border-color: rgba(239,68,68,0.3); transform: rotate(90deg); }
+        .modal-header h3 { font-size: 26px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 12px; }
+        .close-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 45px; height: 45px; border-radius: 50%; color: var(--text-muted); cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; font-size: 20px; }
+        .close-btn:active { transform: scale(0.9); background: rgba(239,68,68,0.2); color: var(--danger); border-color: rgba(239,68,68,0.3); }
         
         .history-list { max-height: 400px; overflow-y: auto; padding-right: 5px; }
-        .history-item { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); transition: 0.3s; }
-        .history-item:hover { background: rgba(255,255,255,0.05); transform: translateX(5px); }
-        .hi-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
-        .hi-date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-        .hi-amt { font-size: 18px; font-weight: 900; }
+        .history-item { background: rgba(0,0,0,0.2); padding: 22px; border-radius: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); }
+        .hi-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .hi-date { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        .hi-amt { font-size: 20px; font-weight: 900; }
         .hi-plus { color: var(--success); }
         .hi-minus { color: var(--danger); }
 
-        .api-box { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.2); font-family: monospace; color: #38bdf8; font-size: 16px; font-weight: 600; margin-bottom: 20px; word-break: break-all; user-select: all; text-align: center; letter-spacing: 1px; }
+        .api-box { background: rgba(0,0,0,0.4); padding: 22px; border-radius: 20px; border: 2px dashed rgba(255,255,255,0.15); font-family: monospace; color: #38bdf8; font-size: 18px; font-weight: 700; margin-bottom: 25px; word-break: break-all; user-select: all; text-align: center; letter-spacing: 2px; }
         
         /* --- SUPPORT AI CHAT UI --- */
-        .chat-container { display: flex; flex-direction: column; height: 400px; background: rgba(0,0,0,0.2); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; }
-        .chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 12px 18px; border-radius: 18px; font-size: 14px; font-weight: 500; line-height: 1.5; animation: slideIn 0.3s; }
-        .msg.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .msg.ai { background: rgba(255,255,255,0.1); color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--glass-border); }
-        .chat-input-area { display: flex; padding: 15px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--glass-border); gap: 10px; }
-        .chat-input-area input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 20px; border-radius: 20px; color: #fff; outline: none; font-size: 14px; }
-        .chat-input-area button { background: var(--primary-gradient); border: none; width: 45px; height: 45px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
-        .chat-input-area button:hover { transform: scale(1.1); }
-        .typing-indicator { font-size: 12px; color: var(--primary); font-weight: 600; padding-left: 10px; display: none; }
+        .chat-container { display: flex; flex-direction: column; height: 450px; background: rgba(0,0,0,0.2); border-radius: 24px; border: 1px solid var(--glass-border); overflow: hidden; }
+        .chat-box { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+        .msg { max-width: 85%; padding: 15px 20px; border-radius: 20px; font-size: 15px; font-weight: 500; line-height: 1.6; animation: slideInChat 0.3s; }
+        @keyframes slideInChat { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .msg.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 5px; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3); }
+        .msg.ai { background: rgba(255,255,255,0.08); color: #fff; align-self: flex-start; border-bottom-left-radius: 5px; border: 1px solid var(--glass-border); }
+        .chat-input-area { display: flex; padding: 18px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--glass-border); gap: 12px; align-items: center; }
+        .chat-input-area input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px 22px; border-radius: 25px; color: #fff; outline: none; font-size: 15px; transition: 0.3s; }
+        .chat-input-area input:focus { border-color: var(--primary); }
+        .chat-input-area button { background: var(--primary-gradient); border: none; width: 55px; height: 55px; border-radius: 50%; color: #fff; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.3s; box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); font-size: 20px; }
+        .chat-input-area button:active { transform: scale(0.9); }
+        .typing-indicator { font-size: 13px; color: var(--primary); font-weight: 600; padding: 10px 25px; display: none; }
 
         .hidden-view { display: none !important; }
     </style>
 </head>
 <body>
 
+    <!-- TOAST ALERTS -->
     <div id="toastBox"></div>
 
     <!-- 1. BANNED SCREEN -->
     <div id="bannedView" class="banned-screen hidden-view">
         <i class="fa-solid fa-ban"></i>
         <h1>Account Banned</h1>
-        <p>This account was logged into a device that is already registered to another user.<br><br><b>Strict Policy: 1 Device = 1 User.</b><br>Your account has been permanently suspended.</p>
+        <p>This device is strictly locked to another user.<br><br><b>Policy: 1 Device = 1 User.</b><br>Your account has been permanently suspended.</p>
     </div>
 
     <!-- 2. AUTH SCREEN -->
@@ -186,7 +186,7 @@
         <div class="auth-container">
             <div class="auth-header">
                 <h1 id="authMainTitle">NovaPay</h1>
-                <p id="authSubTitle" style="font-size:14px; color:var(--text-muted); margin-top:5px;">Secure Bot Payment Gateway</p>
+                <p id="authSubTitle" style="font-size:15px; color:var(--text-muted); margin-top:5px; font-weight:500;">Secure Bot Payment Gateway</p>
             </div>
             
             <div id="signupFields" class="hidden-view">
@@ -210,11 +210,11 @@
             </div>
 
             <div id="captchaBox" class="hidden-view">
-                <label style="font-size: 13px; color: var(--text-muted); display:block; margin-bottom: 8px;">Human Verification: <span id="mathQ" style="color:var(--primary); font-weight:900; font-size:20px;"></span></label>
-                <input type="number" id="mathAns" class="input-group" placeholder="Answer?">
+                <label style="font-size: 14px; color: var(--text-muted); display:block; margin-bottom: 10px; font-weight:600;">Human Verification: <span id="mathQ" style="color:var(--primary); font-weight:900; font-size:22px;"></span></label>
+                <input type="number" id="mathAns" style="width:100%; padding:15px; border-radius:12px; background:rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); color:#fff; font-size:16px; outline:none;" placeholder="Answer?">
             </div>
 
-            <button class="btn" id="authBtn" onclick="handleAuth()">Login Securely</button>
+            <button class="btn" id="authBtn" onclick="handleAuth()"><i class="fa-solid fa-right-to-bracket"></i> Login Securely</button>
             
             <div class="switch-text" onclick="toggleAuthBtn()">
                 <span id="toggleText">Create New Account</span>
@@ -228,7 +228,7 @@
         <div class="dash-header">
             <div>
                 <div class="dash-title">NovaPay <i class="fa-solid fa-bolt" style="color:var(--warning);"></i></div>
-                <div class="user-greeting">Welcome back, <span id="displayUserName" style="color:#fff; font-weight:700;">User</span></div>
+                <div class="user-greeting">Welcome back, <span id="displayUserName" style="color:#fff; font-weight:800;">User</span></div>
             </div>
             <div class="bal-box" onclick="openModal('walletModal')">
                 <div class="bal-label">Live Balance</div>
@@ -253,6 +253,7 @@
 
             <!-- Grid Menu -->
             <div class="grid-container">
+                <!-- Using onclick="openModal('modalID')" strictly prevents bugs -->
                 <div class="grid-item" onclick="openModal('promoModal')">
                     <div class="grid-icon bg-teal"><i class="fa-solid fa-ticket-simple"></i></div>
                     <div class="grid-text">Promo Code</div>
@@ -290,7 +291,7 @@
                     <label>Bot Token (From BotFather)</label>
                     <input type="text" id="adminBotToken" placeholder="12345:ABCDef...">
                 </div>
-                <button class="btn btn-green" onclick="saveAdminData('bot')">Save Bot Config</button>
+                <button class="btn btn-green" onclick="saveAdminData('bot')"><i class="fa-solid fa-floppy-disk"></i> Save Bot Config</button>
             </div>
 
             <div class="admin-box">
@@ -309,7 +310,7 @@
                         <input type="number" step="0.01" id="adminDailyReward" placeholder="0.50">
                     </div>
                 </div>
-                <button class="btn btn-purple" onclick="saveAdminData('ads')">Save Ad Settings</button>
+                <button class="btn btn-purple" onclick="saveAdminData('ads')"><i class="fa-solid fa-floppy-disk"></i> Save Ad Settings</button>
             </div>
             
             <div class="admin-box">
@@ -318,27 +319,28 @@
                     <label>Withdrawal Tax (%)</label>
                     <input type="number" id="adminTax" placeholder="e.g. 10">
                 </div>
-                <button class="btn" onclick="saveAdminData('api')">Save Tax Config</button>
+                <button class="btn btn-dark" onclick="saveAdminData('api')">Save Tax Config</button>
             </div>
 
             <div class="admin-box" style="background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.2);">
                 <h3 style="color: #60a5fa;"><i class="fa-solid fa-robot"></i> Gemini AI Support Config</h3>
                 <div class="input-group">
                     <label>Gemini API Key</label>
-                    <input type="text" id="adminGeminiKey" placeholder="AIzaSy...">
+                    <input type="password" id="adminGeminiKey" placeholder="AIzaSy...">
                 </div>
-                <button class="btn" style="background: var(--primary-gradient);" onclick="saveAdminData('gemini')">Save AI Key</button>
+                <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Set key to enable AI Chat for users.</p>
+                <button class="btn" style="background: var(--primary-gradient);" onclick="saveAdminData('gemini')"><i class="fa-solid fa-floppy-disk"></i> Save AI Key</button>
             </div>
 
-            <button class="btn btn-red" onclick="logoutSystem()" style="margin-top: 20px;"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
+            <button class="btn btn-red" onclick="logoutSystem()" style="margin-top: 30px;"><i class="fa-solid fa-right-from-bracket"></i> Logout Admin</button>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="closeAllModals()">
+            <div class="nav-item active" onclick="closeAllModals(); setActiveNav(this)">
                 <i class="fa-solid fa-house"></i> Home
             </div>
-            <div class="nav-item" onclick="openModal('walletModal')">
+            <div class="nav-item" onclick="openModal('walletModal'); setActiveNav(this)">
                 <i class="fa-solid fa-wallet"></i> Wallet
             </div>
             
@@ -350,49 +352,49 @@
                 <div class="nav-center-text">Profile</div>
             </div>
 
-            <div class="nav-item" onclick="loadHistory()">
+            <div class="nav-item" onclick="loadHistory(); setActiveNav(this)">
                 <i class="fa-solid fa-clock-rotate-left"></i> History
             </div>
-            <div class="nav-item" onclick="openModal('referModal')">
+            <div class="nav-item" onclick="openModal('referModal'); setActiveNav(this)">
                 <i class="fa-solid fa-users"></i> Refer
             </div>
         </div>
     </div>
 
-    <!-- --- MODALS --- -->
+    <!-- --- MODALS (FLAWLESS LOGIC) --- -->
     <div id="promoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>🎁 Claim Promo Code</h3>
+                <h3><i class="fa-solid fa-ticket-simple" style="color:var(--primary);"></i> Claim Promo Code</h3>
                 <button class="close-btn" onclick="closeModal('promoModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <input type="text" id="promoInput" style="width:100%; padding:18px; margin-bottom:20px; border-radius:16px; background:rgba(0,0,0,0.4); border:2px solid var(--glass-border); color:#fff; outline:none; text-transform:uppercase; font-size: 16px; font-weight:700;" placeholder="Enter Code">
-            <button class="btn btn-green" onclick="claimPromo()">Claim Now</button>
+            <input type="text" id="promoInput" style="width:100%; padding:20px; margin-bottom:20px; border-radius:18px; background:rgba(0,0,0,0.4); border:2px solid var(--glass-border); color:#fff; outline:none; text-transform:uppercase; font-size: 18px; font-weight:800; text-align:center;" placeholder="ENTER CODE">
+            <button class="btn btn-green" onclick="claimPromo()"><i class="fa-solid fa-check"></i> Claim Now</button>
         </div>
     </div>
 
     <div id="apiModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-terminal"></i> Merchant API</h3>
+                <h3><i class="fa-solid fa-terminal" style="color:var(--primary);"></i> Merchant API</h3>
                 <button class="close-btn" onclick="closeModal('apiModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.6; font-weight:500;">Link your account with the Telegram Bot using these credentials. Do not share these with anyone!</p>
-            <label style="font-size:13px; color:#fff; font-weight:700; text-transform:uppercase;">User ID Token:</label>
+            <p style="font-size:15px; color:var(--text-muted); margin-bottom:25px; line-height:1.6; font-weight:500;">Link your account with the Telegram Bot using these credentials. Do not share these with anyone!</p>
+            <label style="font-size:13px; color:#fff; font-weight:800; text-transform:uppercase;">User ID Token:</label>
             <div class="api-box" id="pToken">Loading...</div>
-            <label style="font-size:13px; color:#fff; font-weight:700; text-transform:uppercase;">Secret Key:</label>
+            <label style="font-size:13px; color:#fff; font-weight:800; text-transform:uppercase;">Secret Key:</label>
             <div class="api-box" id="pKey" style="color:var(--warning);">Loading...</div>
         </div>
     </div>
 
     <div id="historyModal" class="modal">
-        <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-content" style="max-width: 480px;">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-receipt"></i> Transactions</h3>
+                <h3><i class="fa-solid fa-receipt" style="color:var(--primary);"></i> Transactions</h3>
                 <button class="close-btn" onclick="closeModal('historyModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="history-list" id="historyList">
-                <p style="text-align:center; color:var(--text-muted); font-size:14px; font-weight:500;">Loading history...</p>
+                <p style="text-align:center; color:var(--text-muted); font-size:15px; font-weight:600;">Loading history...</p>
             </div>
         </div>
     </div>
@@ -400,24 +402,24 @@
     <div id="walletModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-wallet"></i> My Wallet</h3>
+                <h3><i class="fa-solid fa-wallet" style="color:var(--primary);"></i> My Wallet</h3>
                 <button class="close-btn" onclick="closeModal('walletModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <h1 style="color:var(--success); margin: 10px 0 25px; font-size:48px; font-weight:900; text-align:center;">₹ <span id="wBalance">0.00</span></h1>
-            <p style="font-size:14px; color:var(--text-muted); margin-bottom:25px; line-height:1.6; background:rgba(59,130,246,0.1); padding:20px; border-radius:16px; border:1px solid rgba(59,130,246,0.2); font-weight:500;">For security, all withdrawals are processed automatically via Bot Request. Open the Telegram Bot to request a payout.</p>
-            <button class="btn" onclick="window.open('https://t.me/'+botUsername, '_blank')">Open Telegram Bot</button>
+            <h1 style="color:var(--success); margin: 15px 0 30px; font-size:55px; font-weight:900; text-align:center;">₹ <span id="wBalance">0.00</span></h1>
+            <p style="font-size:15px; color:var(--text-muted); margin-bottom:30px; line-height:1.7; background:rgba(59,130,246,0.1); padding:20px; border-radius:18px; border:1px solid rgba(59,130,246,0.2); font-weight:500;">For security, all withdrawals are processed automatically via Bot Request. Open the Telegram Bot to request a payout.</p>
+            <button class="btn" onclick="window.open('https://t.me/'+botUsername, '_blank')"><i class="fa-brands fa-telegram"></i> Open Telegram Bot</button>
         </div>
     </div>
 
     <div id="referModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-users"></i> Refer & Earn</h3>
+                <h3><i class="fa-solid fa-users" style="color:var(--primary);"></i> Refer & Earn</h3>
                 <button class="close-btn" onclick="closeModal('referModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; font-weight:500; line-height:1.6;">Share your link with friends. When they click and join, you earn rewards automatically!</p>
-            <label style="font-size:13px; color:#fff; font-weight:700; text-transform:uppercase;">Your Invite Code:</label>
-            <div class="api-box" id="referCodeTxt" style="font-size:26px; font-weight:900; color:var(--success); padding:25px;">---</div>
+            <p style="font-size:15px; color:var(--text-muted); margin-bottom:25px; font-weight:500; line-height:1.7;">Share your link with friends. When they click and join, you earn rewards automatically!</p>
+            <label style="font-size:13px; color:#fff; font-weight:800; text-transform:uppercase;">Your Invite Code:</label>
+            <div class="api-box" id="referCodeTxt" style="font-size:28px; font-weight:900; color:var(--success); padding:30px;">---</div>
             <button class="btn btn-purple" onclick="copyRefer()"><i class="fa-solid fa-copy"></i> Copy Refer Link</button>
         </div>
     </div>
@@ -425,15 +427,15 @@
     <div id="profileModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-user-ninja"></i> My Profile</h3>
+                <h3><i class="fa-solid fa-user-ninja" style="color:var(--primary);"></i> My Profile</h3>
                 <button class="close-btn" onclick="closeModal('profileModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div style="text-align:center; margin-bottom:30px;">
-                <div style="width:100px; height:100px; background:var(--primary-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:45px; color:#fff; margin:0 auto 20px; box-shadow:0 15px 30px rgba(59,130,246,0.4); border: 4px solid var(--glass-border);">
+            <div style="text-align:center; margin-bottom:35px;">
+                <div style="width:120px; height:120px; background:var(--primary-gradient); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:55px; color:#fff; margin:0 auto 20px; box-shadow:0 15px 40px rgba(59,130,246,0.4); border: 5px solid var(--bg-card);">
                     <i class="fa-solid fa-user"></i>
                 </div>
-                <h2 id="proName" style="color:#fff; font-size:26px; font-weight:800;">Loading...</h2>
-                <p id="proId" style="color:var(--text-muted); font-size:15px; margin-top:5px; font-weight:600;">ID: ---</p>
+                <h2 id="proName" style="color:#fff; font-size:30px; font-weight:900;">Loading...</h2>
+                <p id="proId" style="color:var(--text-muted); font-size:16px; margin-top:5px; font-weight:600;">ID: ---</p>
             </div>
             <button class="btn btn-red" onclick="logoutSystem()"><i class="fa-solid fa-right-from-bracket"></i> Logout Safely</button>
         </div>
@@ -441,9 +443,9 @@
 
     <!-- SUPPORT AI MODAL -->
     <div id="supportModal" class="modal">
-        <div class="modal-content" style="padding: 25px 20px; height: 85vh; display: flex; flex-direction: column;">
-            <div class="modal-header" style="margin-bottom: 15px;">
-                <h3><i class="fa-solid fa-robot"></i> AI Support</h3>
+        <div class="modal-content" style="padding: 30px 25px; height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="margin-bottom: 20px;">
+                <h3><i class="fa-solid fa-robot" style="color:var(--primary);"></i> AI Support</h3>
                 <button class="close-btn" onclick="closeModal('supportModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="chat-container">
@@ -488,17 +490,46 @@
         let geminiApiKey = "";
         let aiMemory = [];
 
-        // Toast
+        // --- TOAST FUNCTION ---
         window.showToast = (msg, type='success') => {
             const box = document.getElementById('toastBox');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-circle-exclamation'}"></i> ${msg}`;
             box.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(),300); }, 3000);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(),300); }, 3500);
         };
 
-        // Device Fingerprinting logic (1 Device 1 User)
+        // --- MODAL FIX LOGIC (NO SNAP CLOSING) ---
+        window.openModal = (id) => {
+            closeAllModals(); // safely close others first
+            const m = document.getElementById(id);
+            m.classList.remove('hidden-view');
+            // Allow display:none to clear before opacity transitions
+            setTimeout(() => { m.classList.add('show'); }, 30);
+        };
+        
+        window.closeModal = (id) => {
+            const m = document.getElementById(id);
+            m.classList.remove('show');
+            setTimeout(() => { m.classList.add('hidden-view'); }, 400); // match css transition
+        };
+        
+        window.closeAllModals = () => {
+            document.querySelectorAll('.modal').forEach(m => {
+                if(m.classList.contains('show')){
+                    m.classList.remove('show');
+                    setTimeout(() => { m.classList.add('hidden-view'); }, 400);
+                }
+            });
+        };
+
+        window.setActiveNav = (element) => {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(element) element.classList.add('active');
+        };
+
+        // --- DEVICE LOCK LOGIC (1 DEVICE = 1 USER) ---
         function getDeviceId() {
             let id = localStorage.getItem('nova_device_id');
             if(!id) {
@@ -509,27 +540,25 @@
         }
         const deviceId = getDeviceId();
 
-        // Check Referral Code & Session on Load
+        // --- AUTO-LOGIN & REFERRAL CHECK ---
         window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
-            
-            // Check Auto-login session
             const session = localStorage.getItem('nova_session');
 
             if(refCode) {
-                // Force switch to Sign Up
+                // User clicked a refer link! Force sign up page.
                 isLogin = false;
                 switchToSignupUI();
                 document.getElementById('regRefer').value = refCode.toUpperCase();
                 showToast("Referral Code Applied!", "success");
             } else if (session) {
-                // Auto Login
+                // Auto Login Process
                 try {
                     let sData = JSON.parse(session);
                     document.getElementById('tgId').value = sData.id;
                     document.getElementById('tgPass').value = sData.pass;
-                    handleAuth(); // Trigger login logic
+                    handleAuth(); 
                 } catch(e) { localStorage.removeItem('nova_session'); }
             }
         };
@@ -547,7 +576,7 @@
             } else {
                 document.getElementById('signupFields').classList.add('hidden-view');
                 document.getElementById('captchaBox').classList.add('hidden-view');
-                document.getElementById('authBtn').innerText = "Login Securely";
+                document.getElementById('authBtn').innerHTML = "<i class='fa-solid fa-right-to-bracket'></i> Login Securely";
                 document.getElementById('toggleText').innerText = "Create New Account";
                 document.getElementById('authMainTitle').innerText = "NovaPay";
             }
@@ -556,7 +585,7 @@
         function switchToSignupUI() {
             document.getElementById('signupFields').classList.remove('hidden-view');
             document.getElementById('captchaBox').classList.remove('hidden-view');
-            document.getElementById('authBtn').innerText = "Create Account";
+            document.getElementById('authBtn').innerHTML = "<i class='fa-solid fa-user-plus'></i> Create Account";
             document.getElementById('toggleText').innerText = "Back to Login";
             document.getElementById('authMainTitle').innerText = "Join Nova";
             
@@ -575,29 +604,30 @@
             });
         }
 
+        // --- AUTHENTICATION (STRICT LOGIC) ---
         window.handleAuth = async () => {
             let id = document.getElementById('tgId').value.trim();
             let pass = document.getElementById('tgPass').value;
             let btn = document.getElementById('authBtn');
+            let originalText = btn.innerHTML;
 
             if(!id || !pass) return showToast("Enter ID and Password!", "error");
 
             if(id === "101" && pass === "90901") {
-                currUser = "101"; 
-                userName = "Master Admin";
+                currUser = "101"; userName = "Master Admin";
                 localStorage.setItem('nova_session', JSON.stringify({id: id, pass: pass}));
                 return openDash("101", { name: "Master Admin" });
             }
 
-            btn.innerText = "Processing...";
+            btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> Processing...";
 
             try {
-                // 1. Device Check Logic (Strict 1 Device = 1 User)
+                // Device Check Logic
                 let lockRef = ref(db, 'device_locks/' + deviceId);
                 let lockSnap = await get(lockRef);
                 
                 if(lockSnap.exists() && lockSnap.val() !== id) {
-                    // This device belongs to someone else. Ban the NEW attempted ID.
+                    // Mismatched device logic -> Ban new ID
                     await update(ref(db, 'nova_users/' + id), { isBanned: true });
                     document.getElementById('authView').classList.add('hidden-view');
                     document.getElementById('bannedView').classList.remove('hidden-view');
@@ -606,17 +636,17 @@
 
                 let uRef = ref(db, 'nova_users/' + id);
                 
-                // SIGN UP LOGIC
                 if(!isLogin) {
+                    // SIGN UP
                     let name = document.getElementById('regName').value.trim();
                     let refInput = document.getElementById('regRefer').value.trim().toUpperCase();
                     let mAns = parseInt(document.getElementById('mathAns').value);
                     
-                    if(!name) { btn.innerText="Create Account"; return showToast("Enter Name!", "error"); }
-                    if(mAns !== cAns) { btn.innerText="Create Account"; return showToast("Wrong Math Answer!", "error"); }
+                    if(!name) { btn.innerHTML=originalText; return showToast("Enter Name!", "error"); }
+                    if(mAns !== cAns) { btn.innerHTML=originalText; return showToast("Wrong Math Answer!", "error"); }
                     
                     let s = await get(uRef); 
-                    if(s.exists()) { btn.innerText="Create Account"; return showToast("ID Exists! Please login.", "error"); }
+                    if(s.exists()) { btn.innerHTML=originalText; return showToast("ID Exists! Please login.", "error"); }
                     
                     let uniqueToken = "NV-" + genStr(8);
                     let nUser = { 
@@ -628,16 +658,16 @@
                     };
                     
                     await set(uRef, nUser); 
-                    await set(lockRef, id); // Lock device to this new user
+                    await set(lockRef, id); // Lock device
                     await logHistory(id, "Account Created", 0, "plus");
 
                     localStorage.setItem('nova_session', JSON.stringify({id: id, pass: pass}));
                     openDash(id, nUser);
                 } 
-                // LOGIN LOGIC
                 else {
+                    // LOGIN
                     let s = await get(uRef); 
-                    if(!s.exists()) { btn.innerText="Login Securely"; return showToast("User not found!", "error"); }
+                    if(!s.exists()) { btn.innerHTML=originalText; return showToast("User not found!", "error"); }
                     
                     let d = s.val(); 
                     if(d.isBanned) {
@@ -646,21 +676,20 @@
                         return;
                     }
 
-                    if(d.pass !== pass) { btn.innerText="Login Securely"; return showToast("Wrong Password!", "error"); }
+                    if(d.pass !== pass) { btn.innerHTML=originalText; return showToast("Wrong Password!", "error"); }
                     
-                    await set(lockRef, id); // Ensure lock is refreshed
+                    await set(lockRef, id); // Refresh lock
                     localStorage.setItem('nova_session', JSON.stringify({id: id, pass: pass}));
                     openDash(id, d);
                 }
             } catch(e) { 
                 showToast("Network Error!", "error"); 
-                btn.innerText = isLogin ? "Login Securely" : "Create Account";
+                btn.innerHTML = originalText;
             }
         };
 
         function openDash(id, data) {
-            currUser = id;
-            userName = data.name || id;
+            currUser = id; userName = data.name || id;
             
             document.getElementById('authView').classList.add('hidden-view');
             document.getElementById('mainView').classList.remove('hidden-view');
@@ -694,7 +723,6 @@
                 document.getElementById('proName').innerText = userName;
                 document.getElementById('proId').innerText = "ID: " + id;
                 
-                // Live Balance
                 onValue(ref(db, 'nova_users/' + id + '/bal'), (snap) => {
                     let b = parseFloat(snap.val() || 0).toFixed(2);
                     document.getElementById('userBalanceDisplay').innerText = b;
@@ -722,7 +750,7 @@
                 }
             });
 
-            // Initialize AI Context
+            // Initialize AI Context memory
             aiMemory = [
                 {
                     "role": "user",
@@ -735,8 +763,9 @@
             ];
         }
 
+        // --- DASHBOARD FUNCTIONS ---
         window.watchAd = () => {
-            if(!sysAds.link || sysAds.link.trim() === "") return showToast("Ads currently disabled.", "error");
+            if(!sysAds.link || sysAds.link.trim() === "") return showToast("Ads currently disabled by Admin.", "error");
             window.open(sysAds.link, '_blank');
             
             if(currUser === "101") return;
@@ -748,17 +777,17 @@
                 
                 await update(ref(db, 'nova_users/' + currUser), { bal: parseFloat(newBal) });
                 await logHistory(currUser, "Ad Watched", reward, "plus");
-                showToast(`🎉 You earned ₹${reward.toFixed(2)}!`);
+                showToast(`🎉 You earned ₹${reward.toFixed(2)} from Ad!`);
             }, 3000);
         };
 
         window.claimDailyBonus = async () => {
             if(currUser === "101") return;
-            if(!sysAds.link || sysAds.link.trim() === "") return showToast("⚠️ Ads disabled. Daily Bonus needs Ads.", "error");
+            if(!sysAds.link || sysAds.link.trim() === "") return showToast("⚠️ Ads are disabled. Daily Bonus requires Ads to be active.", "error");
 
             let last = await get(ref(db, 'nova_users/' + currUser + '/lastDaily'));
             let now = new Date().toDateString();
-            if(last.exists() && last.val() === now) return showToast("❌ Already claimed today!", "error");
+            if(last.exists() && last.val() === now) return showToast("❌ Already claimed today. Come back tomorrow!", "error");
             
             window.open(sysAds.link, '_blank');
 
@@ -808,11 +837,11 @@
             if(currUser === "101") return showToast("Admin has no history", "error");
             openModal('historyModal');
             const hList = document.getElementById('historyList');
-            hList.innerHTML = "<p style='text-align:center; color:#94a3b8;'>Loading...</p>";
+            hList.innerHTML = "<p style='text-align:center; color:var(--text-muted); font-size:15px; font-weight:600;'>Loading...</p>";
             
             const snap = await get(ref(db, `nova_users/${currUser}/history`));
             if(!snap.exists()) {
-                hList.innerHTML = "<p style='text-align:center; color:#94a3b8;'>No transactions yet.</p>";
+                hList.innerHTML = "<p style='text-align:center; color:var(--text-muted); font-size:15px; font-weight:600;'>No transactions yet.</p>";
                 return;
             }
             
@@ -823,7 +852,7 @@
             keys.forEach(k => {
                 let tx = data[k];
                 let sign = tx.type === 'plus' ? '+' : '-';
-                let cClass = tx.type === 'plus' ? 'hi-plus' : 'hi-minus';
+                let colorClass = tx.type === 'plus' ? 'hi-plus' : 'hi-minus';
                 
                 html += `
                 <div class="history-item">
@@ -831,7 +860,7 @@
                         <div class="hi-title">${tx.title}</div>
                         <div class="hi-date">${tx.date}</div>
                     </div>
-                    <div class="hi-amt ${cClass}">${sign}₹${tx.amount}</div>
+                    <div class="hi-amt ${colorClass}">${sign}₹${tx.amount}</div>
                 </div>`;
             });
             hList.innerHTML = html;
@@ -851,7 +880,6 @@
             const chatBox = document.getElementById('chatBox');
             const typing = document.getElementById('aiTyping');
             
-            // Append User Msg
             chatBox.innerHTML += `<div class="msg user">${msg}</div>`;
             inputEl.value = "";
             chatBox.scrollTop = chatBox.scrollHeight;
@@ -901,27 +929,6 @@
             }
         };
 
-        // --- MODAL UTILS ---
-        window.openModal = (id) => {
-            closeAllModals(); // close others first
-            const m = document.getElementById(id);
-            m.classList.remove('hidden-view');
-            setTimeout(() => m.classList.add('show'), 10);
-        };
-        window.closeModal = (id) => {
-            const m = document.getElementById(id);
-            m.classList.remove('show');
-            setTimeout(() => m.classList.add('hidden-view'), 400);
-        };
-        window.closeAllModals = () => {
-            document.querySelectorAll('.modal').forEach(m => {
-                m.classList.remove('show');
-                setTimeout(() => m.classList.add('hidden-view'), 400);
-            });
-        };
-        window.navTo = (page) => {
-            closeAllModals();
-        };
         window.copyRefer = () => {
             let code = document.getElementById('referCodeTxt').innerText;
             let link = `${window.location.origin}${window.location.pathname}?ref=${code}`;
